@@ -21,7 +21,6 @@ jobs:
     - name: Install dependencies
       run: |
         npm ci  # Use "npm ci" for faster installation based on package-lock.json or npm-shrinkwrap.json
-        npm install -g eslint  # Install ESLint globally if needed
 
     - name: Run ESLint (Linting)
       run: |
