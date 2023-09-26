@@ -5,6 +5,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 
 In the project directory, you can run:
+### `npm install`
+
+is a command used with Node Package Manager (npm) to install the dependencies specified in a project's package.json file (Note: `first time setup` must run this to run other npm commands).
 
 ### `npm start`
 
