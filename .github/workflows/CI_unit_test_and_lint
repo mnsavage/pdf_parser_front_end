@@ -1,0 +1,36 @@
+name: CI/CD for React Project
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14  # You can adjust the Node.js version as needed
+
+    - name: Install dependencies
+      run: |
+        npm ci  # Use "npm ci" for faster installation based on package-lock.json or npm-shrinkwrap.json
+        npm install -g eslint  # Install ESLint globally if needed
+
+    - name: Run ESLint (Linting)
+      run: |
+        npm run lint  # Adjust the linting script as per your project's setup
+
+    - name: Run Unit Tests
+      run: |
+        npm test  # Adjust the test script as per your project's setup
+
+    - name: Complete PR Check
+      run: |
+        echo "Linting and unit tests passed."
