@@ -4,7 +4,7 @@ import Inspect from '../Inspect';
 describe('Inspect', () => {
     test('renders Inspect title', () => {
         render(<Inspect />);
-        const linkElement = screen.getByText(/Inspect/i);
-        expect(linkElement).toBeInTheDocument();
+        const element = screen.getByText(/Inspect/i);
+        expect(element).toBeInTheDocument();
     });
 })
