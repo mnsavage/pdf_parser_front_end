@@ -1,9 +1,35 @@
 import React from 'react'; 
 import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+describe('App', () => {
+
+  test('renders Upload link', () => {
+    render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>);
+    const linkElement = screen.getAllByText(/Upload/);
+    expect(linkElement.length).not.toBe(0);
+  });
+  
+  test('renders Confirm link', () => {
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>);
+    const linkElement = screen.getAllByText(/Confirm/);
+    expect(linkElement.length).not.toBe(0);
+  });
+  
+  test('renders Inspect link', () => {
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>);
+    const linkElement = screen.getAllByText(/Inspect/);
+    expect(linkElement.length).not.toBe(0);
+  });
+  
+})
