@@ -6,7 +6,7 @@ import './Header.css';
 import ALogo from '../../assets/A-Square-Logo-4c_Official.jpg'
 import nameplate from '../../assets/nameplate_Reverse.png'
   
-function Header() {
+const Header = () => {
   return (
       <AppBar position="static" className="header">
         <Toolbar>

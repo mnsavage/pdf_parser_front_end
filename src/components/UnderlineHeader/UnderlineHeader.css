@@ -1,0 +1,11 @@
+.title {
+    padding-left: 64px;
+    padding-top: 32px;
+    height: 32px;
+}
+
+.line {
+    position: absolute;
+    right: 64px;
+    left: 64px;
+}

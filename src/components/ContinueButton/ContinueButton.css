@@ -1,0 +1,13 @@
+.continue-button {
+    width: 192px;
+    height: 64px;
+}
+
+.button-box {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    position: relative;
+    bottom: 64px;
+    right: 64px;
+}
