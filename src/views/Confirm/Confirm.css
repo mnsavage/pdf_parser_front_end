@@ -1,0 +1,50 @@
+.pdf-viewer {
+    position: relative;
+    top: 16px;
+    width: 50%;
+    border: solid;
+}
+
+.right-container {
+    position: relative;
+    top: 0px;
+    bottom: 64px;
+    width: 50%;
+}
+
+.confirm-list-container {
+    position: absolute;
+    top: 74px;
+    bottom: 80px;
+    left: 64px;
+    right: 32px;
+    overflow: auto;
+}
+
+.page-container {
+    position: absolute;
+    top: 192px;
+    bottom: 64px;
+    right: 64px;
+    left: 64px;
+    display: flex;
+}
+
+.button-box {
+    justify-content: space-between;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    position: relative;
+    bottom: 64px;
+    right: 64px;
+}
+
+.back-button {
+    width: 192px;
+    height: 64px;
+}
+
+.back-button-container {
+    margin-right: 32px;
+}

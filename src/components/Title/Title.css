@@ -3,4 +3,6 @@
     padding-top: 34px;
     height: 64px;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }

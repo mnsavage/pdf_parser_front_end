@@ -1,0 +1,4 @@
+.list-button {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

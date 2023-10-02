@@ -2,6 +2,9 @@
     padding-left: 64px;
     padding-top: 32px;
     height: 32px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .line {

@@ -4,14 +4,6 @@
     height: 128px;
 }
 
-.dashed-box {
-    height: 192px;
-    max-width: 1312px;
-    border-radius: 10px;
-    border: 4px dashed black;
-    align-self: left;
-}
-
 .local-files-button {
     width: 264px;
     height: 64px;
@@ -43,12 +35,11 @@
     right: 64px;
 }
 
-.list-container {
-    position: relative;
-    padding-right: 64px;
-    top: 16px;
-    right: 288px;
+.upload-list-container {
+    position: absolute;
+    top: 500px;
+    bottom: 64px;
     left: 64px;
-    bottom: 0;
+    right: 288px;
     overflow: auto;
 }
