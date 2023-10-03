@@ -5,7 +5,7 @@ import Title from '../Title';
 describe('Title', () => {
     test('renders title', () => {
         render(<Title />);
-        const element = screen.getByText(/Verify Electronic Theses & Dissertations Format/i);
+        const element = screen.getByText('Verify Electronic Theses & Dissertations Format');
         expect(element).toBeInTheDocument();
     });
 })
