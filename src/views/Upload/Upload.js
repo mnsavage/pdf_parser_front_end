@@ -16,7 +16,7 @@ const Upload = ({ setPage, uploadedFiles, setUploadedFiles }) => {
   const [files, setFiles] = useState(uploadedFiles);
 
   const continueAction = () => {
-    if (!files) {
+    if (!files || [...files].length == 0) {
       alert('Please select files to upload');
       return;
     }
@@ -43,13 +43,16 @@ const Upload = ({ setPage, uploadedFiles, setUploadedFiles }) => {
             type='file' 
             accept='application/pdf'
             onChange={ (e) => {
-              setFiles(e.target.files);
+              setFiles(prevFiles => [...prevFiles, ...e.target.files]);
+            } }
+            onClick={ (e) => {
+              e.target.value = null;
             } }
             multiple
           />
         </Button>
       </div>
-      {files && (
+      {files && [...files].length > 0 && (
         <>
         <UnderlineHeader title='Attached Files' />
         <div className='upload-list-container'>
