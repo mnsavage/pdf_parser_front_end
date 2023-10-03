@@ -1,35 +1,23 @@
 import React from 'react'; 
 import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 
 describe('App', () => {
 
-  test('renders Upload link', () => {
-    render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>);
-    const linkElement = screen.getAllByText(/Upload/);
-    expect(linkElement.length).not.toBe(0);
+  test('renders header', () => {
+    render(<App />);
+    const element = screen.getByAltText('Script A Logo');
+    expect(element).toBeInTheDocument();
   });
-  
-  test('renders Confirm link', () => {
-    render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>);
-    const linkElement = screen.getAllByText(/Confirm/);
-    expect(linkElement.length).not.toBe(0);
+  test('renders title', () => {
+    render(<App />);
+    const element = screen.getByText('Verify Electronic Theses & Dissertations Format');
+    expect(element).toBeInTheDocument();
   });
-  
-  test('renders Inspect link', () => {
-    render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>);
-    const linkElement = screen.getAllByText(/Inspect/);
-    expect(linkElement.length).not.toBe(0);
+  test('renders upload page first', () => {
+    render(<App />);
+    const element = screen.getByText('Upload Theses or Dissertations as PDFs');
+    expect(element).toBeInTheDocument();
   });
   
 })
