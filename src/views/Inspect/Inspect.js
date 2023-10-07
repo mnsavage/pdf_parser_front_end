@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button'
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import pageOption from '../../utils/pageOption';
 import UnderlineHeader from '../../components/UnderlineHeader/UnderlineHeader';
 import FileList from '../../components/FileList/FileList';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import PropTypes from 'prop-types';
-import pdfRequirementsMet from './_test_/mocks';
 import RequirementsList from '../../components/RequirementsList/RequirementsList';
 import './Inspect.css';
 
-const Inspect = ({ setPage, uploadedFiles, setUploadedFiles }) => {
+const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [editing, setEditing] = React.useState(false);
+  const [showUnmet, setShowUnmet] = React.useState(false);
   const [url, setUrl] = React.useState('');
-  const [requirementsList, setRequirementsList] = React.useState(pdfRequirementsMet.files);
 
   useEffect(() => {
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
@@ -22,6 +23,10 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles }) => {
 
   const handleEditClick = () => {
     setEditing(!editing);   
+  };
+
+  const handleUnmetSwitch = () => {
+    setShowUnmet(!showUnmet);   
   };
 
   const handleListItemClick = (index) => {
@@ -46,8 +51,9 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles }) => {
         )}
         <div className='vl'></div>
         <div className='right-list-container'>
+          <FormControlLabel control={<Switch onChange={handleUnmetSwitch} />} label='Show only unmet conditons' className='switch' />
           <div className='requirements-list-container'>
-            <RequirementsList requirementsList={requirementsList[selectedIndex].header} disabled={!editing} />
+            <RequirementsList requirementsList={requirementsList[selectedIndex].header} disabled={!editing} showUnmet={showUnmet} />
           </div>
         </div>
       </div>
@@ -104,7 +110,8 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles }) => {
 Inspect.propTypes = {
   setPage: PropTypes.func.isRequired,
   uploadedFiles: PropTypes.array.isRequired,
-  setUploadedFiles: PropTypes.func.isRequired
+  setUploadedFiles: PropTypes.func.isRequired,
+  requirementsList: PropTypes.object.isRequired
 };
 
 export default Inspect;

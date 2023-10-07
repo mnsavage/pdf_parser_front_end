@@ -1,20 +1,3 @@
-const pdfRequirements = {
-    message: 'retrive PDF requirements succesfully',
-    header: [
-        {
-            title: 'Page Formatting & Font',
-            requirements: [
-                'Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs',
-                'No Blank pages in the documents',
-            ],
-        },
-        {
-            title: 'Page Order & Section Formatting',
-            requirements: ['2 double spaces beneath title'],
-        },
-    ]
-};
-
 const pdfRequirementsMet = {
     message: 'retrive PDF requirements succesfully',
     files: [

@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import './RequirementsList.css';
 
-const RequirementsList = ({ requirementsList, disabled }) => {
+const RequirementsList = ({ requirementsList, disabled, showUnmet }) => {
   const [checked, setChecked] = React.useState([]);
   const [open, setOpen] = React.useState([]);
 
@@ -64,18 +64,42 @@ const RequirementsList = ({ requirementsList, disabled }) => {
             className='expandable-header'
             onClick={handleOpen(value.title)}
           >
-            <ListItemText key={`ListItemText-${value.title}`} disableTypography='true' className='header-title' primary={<Typography key={`Typography-${value.title}`} variant='body2'>{value.title}</Typography>} />
-            {(open.indexOf(value.title) !== -1) ? <ExpandMore key={`ExpandMore-${value.title}`}/> : <ExpandLess key={`ExpandLess-${value.title}`}/>}
+            <ListItemText 
+              key={`ListItemText-${value.title}`} 
+              disableTypography='true' 
+              className='header-title' 
+              primary={
+                <Typography 
+                  key={`Typography-${value.title}`} 
+                  variant='body2'
+                >
+                  {value.title}
+                </Typography>} 
+            />
+            {
+              (open.indexOf(value.title) !== -1) ? 
+              <ExpandMore key={`ExpandMore-${value.title}`}/> : 
+              <ExpandLess key={`ExpandLess-${value.title}`}/>
+            }
           </ListItemButton>
-          <Collapse in={open.indexOf(value.title) == -1} key={`Collapse-${value.title}`} timeout='auto' unmountOnExit>
+          <Collapse 
+            in={open.indexOf(value.title) == -1} 
+            key={`Collapse-${value.title}`} 
+            timeout='auto' 
+            unmountOnExit
+          >
             <List component='div' key={`List-${value.title}`}>
-              {value.requirements.map((req => {
+              {value.requirements.filter(value => !showUnmet || checked.indexOf(value.title) == -1 ).map((req => {
                 return (
                 <ListItem
                   key={`ListItem-${req.title}`}
                   className='list-requirement'
                 >
-                  <ListItemButton key={`ListItemButton-${req.title}`} role={undefined} onClick={handleCheck(req.title)}>
+                  <ListItemButton  
+                    key={`ListItemButton-${req.title}`} 
+                    role={undefined} 
+                    onClick={handleCheck(req.title)}
+                  >
                     <ListItemIcon key={`ListItemIcon-${req.title}`} >
                       <Checkbox
                         checked={checked.indexOf(req.title) !== -1}
@@ -85,7 +109,18 @@ const RequirementsList = ({ requirementsList, disabled }) => {
                         id={`Checkbox-${req.title}`}
                       />
                     </ListItemIcon>
-                    <ListItemText className='requirement-text' key={`ListItemText-${req.title}`} disabletypography='true' primary={<Typography key={`Typography-${req.title}`} variant='body3'>{req.title}</Typography>} />
+                    <ListItemText 
+                      className='requirement-text' 
+                      key={`ListItemText-${req.title}`} 
+                      disabletypography='true' 
+                      primary={
+                        <Typography 
+                          key={`Typography-${req.title}`}  
+                          variant='body3'
+                        >
+                          {req.title}
+                        </Typography>} 
+                    />
                   </ListItemButton>
                 </ListItem>);
               }))}
@@ -101,6 +136,7 @@ const RequirementsList = ({ requirementsList, disabled }) => {
 RequirementsList.propTypes = {
     requirementsList: PropTypes.array.isRequired,
     disabled: PropTypes.bool.isRequired,
+    showUnmet: PropTypes.bool.isRequired,
 };
 
 export default RequirementsList;

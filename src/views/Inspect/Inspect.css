@@ -1,6 +1,6 @@
 .requirements-list-container {
     position: absolute;
-    top: 74px;
+    top: 64px;
     bottom: 80px;
     left: 32px;
     right: 32px;
@@ -48,4 +48,10 @@
     padding-left: 32px;
     border-right: solid;
     height: 100%;
-  }
+}
+
+.switch {
+    position: absolute;
+    right: 24px;
+    top: 32px;
+}
