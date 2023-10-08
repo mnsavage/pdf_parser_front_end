@@ -16,7 +16,7 @@ const Upload = ({ setPage, uploadedFiles, setUploadedFiles }) => {
   const [files, setFiles] = useState(uploadedFiles);
 
   const continueAction = () => {
-    if (!files || [...files].length == 0) {
+    if (!files || files.length == 0) {
       alert('Please select files to upload');
       return;
     }
@@ -25,7 +25,7 @@ const Upload = ({ setPage, uploadedFiles, setUploadedFiles }) => {
   };
 
   const removeFile = (name) => {
-     setFiles([...files].filter(item => item.name !== name));
+     setFiles(files.filter(item => item.name !== name));
   };
 
   return (
@@ -43,7 +43,17 @@ const Upload = ({ setPage, uploadedFiles, setUploadedFiles }) => {
             type='file' 
             accept='application/pdf'
             onChange={ (e) => {
-              setFiles(prevFiles => [...prevFiles, ...e.target.files]);
+              // Add to list if there are already added files
+              if (files && files.length > 0) {
+                // Make sure there are no duplicates
+                let addFiles = [...e.target.files].filter(item => 
+                  files.filter(file => file.name == item.name) == 0
+                )
+                setFiles(prevFiles => [...prevFiles, ...addFiles]);
+              }
+              else {
+                setFiles([...e.target.files]);
+              }
             } }
             onClick={ (e) => {
               e.target.value = null;
@@ -52,12 +62,12 @@ const Upload = ({ setPage, uploadedFiles, setUploadedFiles }) => {
           />
         </Button>
       </div>
-      {files && [...files].length > 0 && (
+      {files && files.length > 0 && (
         <>
         <UnderlineHeader title='Attached Files' />
         <div className='upload-list-container'>
           <List dense={false}>
-          {[...files].map((value) => (
+          {files.map((value) => (
             <ListItem
               key={value.name}
               disableGutters
@@ -86,7 +96,7 @@ const Upload = ({ setPage, uploadedFiles, setUploadedFiles }) => {
 
 Upload.propTypes = {
   setPage: PropTypes.func.isRequired,
-  uploadedFiles: PropTypes.any,
+  uploadedFiles: PropTypes.array,
   setUploadedFiles: PropTypes.func.isRequired
 };
 

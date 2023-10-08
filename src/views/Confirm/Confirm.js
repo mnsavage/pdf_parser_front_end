@@ -55,7 +55,7 @@ const [selectedIndex, setSelectedIndex] = React.useState(0);
 
 Confirm.propTypes = {
   setPage: PropTypes.func.isRequired,
-  uploadedFiles: PropTypes.any.isRequired,
+  uploadedFiles: PropTypes.array.isRequired,
 };
 
 export default Confirm;

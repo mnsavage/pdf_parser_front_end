@@ -1,0 +1,57 @@
+.requirements-list-container {
+    position: absolute;
+    top: 64px;
+    bottom: 80px;
+    left: 32px;
+    right: 32px;
+    overflow: auto;
+}
+
+.right-list-container {
+    position: relative;
+    top: 0px;
+    bottom: 64px;
+    width: 65%;
+}
+
+.pdf-viewer {
+    position: relative;
+    top: 16px;
+    width: 50%;
+    height: 96%;
+    border: solid;
+}
+
+.inspect-page-container {
+    position: absolute;
+    top: 192px;
+    bottom: 64px;
+    right: 64px;
+    left: 32px;
+    display: flex;
+}
+
+.left-container {
+    position: relative;
+    left: 0px;
+    top: 0px;
+    bottom: 64px;
+    width: 35%;
+}
+
+.secondary-button {
+    width: 256px;
+    height: 64px;
+}
+
+.vl {
+    padding-left: 32px;
+    border-right: solid;
+    height: 100%;
+}
+
+.switch {
+    position: absolute;
+    right: 24px;
+    top: 32px;
+}

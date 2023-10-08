@@ -8,7 +8,7 @@ import './FileList.css';
 const FileList = ({ selectedIndex, files, handleListItemClick }) => {
   return (
     <List dense={false}>
-        {[...files].map((value, index) => (
+        {files.map((value, index) => (
         <ListItemButton
             className='list-button'
             selected={selectedIndex == index}
@@ -25,7 +25,7 @@ const FileList = ({ selectedIndex, files, handleListItemClick }) => {
 
 FileList.propTypes = {
     selectedIndex: PropTypes.number.isRequired,
-    files: PropTypes.any.isRequired,
+    files: PropTypes.array.isRequired,
     handleListItemClick: PropTypes.func.isRequired
 };
 
