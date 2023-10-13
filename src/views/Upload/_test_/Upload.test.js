@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Upload from '../Upload';
 
 describe('Upload', () => {
@@ -19,6 +19,13 @@ describe('Upload', () => {
         render(<Upload setPage={jest.fn()} setUploadedFiles={jest.fn()}/>);
         const button = screen.getByText('Continue');
         expect(button).toBeInTheDocument();
+    });
+
+    test('Render alert when the Continue button is pressed and no files are uploaded', async () => {
+        render(<Upload setPage={jest.fn()} setUploadedFiles={jest.fn()}/>);
+        const button = screen.getByText('Continue');
+        fireEvent.click(button);
+        await waitFor(() =>  expect(screen.getByText('Please select files to upload')).toBeInTheDocument());
     });
 
     test('Lists files when they are given on init', () => {

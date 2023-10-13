@@ -43,3 +43,12 @@
     right: 288px;
     overflow: auto;
 }
+
+.error {
+    position: absolute;
+    height: 32px;
+    bottom: 8px;
+    /* left: 64px; */
+    width: 50%;
+    right: 0;
+}
