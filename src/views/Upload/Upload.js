@@ -9,15 +9,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import pageOption from '../../utils/pageOption';
 import UnderlineHeader from '../../components/UnderlineHeader/UnderlineHeader';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
+import Alert from '../../components/Alert/Alert';
 import PropTypes from 'prop-types';
 import './Upload.css';
 
 const Upload = ({ setPage, uploadedFiles, setUploadedFiles }) => {
   const [files, setFiles] = useState(uploadedFiles);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const continueAction = () => {
     if (!files || files.length == 0) {
-      alert('Please select files to upload');
+      setAlertOpen(true);
       return;
     }
     setUploadedFiles(files);
@@ -30,6 +32,11 @@ const Upload = ({ setPage, uploadedFiles, setUploadedFiles }) => {
 
   return (
     <>
+      <Alert 
+        isOpen={alertOpen} 
+        title='Please select files to upload' 
+        continueAction={() => {setAlertOpen(false)}} 
+      />
       <UnderlineHeader title='Upload Theses or Dissertations as PDFs'/>
       <div className='outside'>
         <Button

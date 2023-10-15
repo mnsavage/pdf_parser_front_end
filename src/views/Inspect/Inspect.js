@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -7,16 +7,19 @@ import pageOption from '../../utils/pageOption';
 import UnderlineHeader from '../../components/UnderlineHeader/UnderlineHeader';
 import FileList from '../../components/FileList/FileList';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
+import Alert from '../../components/Alert/Alert';
 import PropTypes from 'prop-types';
 import RequirementsList from '../../components/RequirementsList/RequirementsList';
 import './Inspect.css';
 
 const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList }) => {
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [metConditions, setMetConditions] = React.useState([]);
-  const [editing, setEditing] = React.useState(false);
-  const [showUnmet, setShowUnmet] = React.useState(false);
-  const [url, setUrl] = React.useState('');
+  const [editing, setEditing] = useState(false);
+  const [showUnmet, setShowUnmet] = useState(false);
+  const [url, setUrl] = useState('');
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [editAlertOpen, setEditAlertOpen] = useState(false);
 
   useEffect(() => {
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
@@ -52,6 +55,30 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
 
   return (
     <>
+      <Alert 
+        isOpen={alertOpen} 
+        title='Are you sure you want to continue?' 
+        desc='All data will be lost. Download summaries before continuing.' 
+        continueAction={() => {
+          setAlertOpen(false);
+          setUploadedFiles(null);
+          setPage(pageOption.Upload);
+        }} 
+        backAction={() => {
+          setAlertOpen(false);
+        }}
+      />
+      <Alert 
+        isOpen={editAlertOpen} 
+        title='Save changes?' 
+        desc='Continue to save edits to the requirements.' 
+        continueAction={() => {
+          setEditAlertOpen(false);handleEditClick();
+        }} 
+        backAction={() => {
+          setEditAlertOpen(false)
+        }}
+      />
       <div className='inspect-page-container'>
         {editing ? (
           <embed
@@ -112,10 +139,9 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
         )}
         <ContinueButton action={() => {
           if (editing) {
-            handleEditClick();
+            setEditAlertOpen(true);
           } else {
-            setUploadedFiles(null);
-            setPage(pageOption.Upload);
+            setAlertOpen(true);
           }
           }} 
         />
@@ -128,7 +154,7 @@ Inspect.propTypes = {
   setPage: PropTypes.func.isRequired,
   uploadedFiles: PropTypes.array.isRequired,
   setUploadedFiles: PropTypes.func.isRequired,
-  requirementsList: PropTypes.object.isRequired
+  requirementsList: PropTypes.array.isRequired
 };
 
 export default Inspect;

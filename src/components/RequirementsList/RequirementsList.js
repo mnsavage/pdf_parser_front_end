@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -55,7 +55,7 @@ const RequirementsList = ({ requirementsList, metConditions, disabled, showUnmet
   };
 
   return (
-        <List>
+    <List key='list'>
       {requirementsList.map((value) => {
         return (
           <>

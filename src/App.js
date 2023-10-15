@@ -13,7 +13,7 @@ const App = () => {
   const [page, setPage] = useState(pageOption.Upload);
   const [uploadedFiles, setUploadedFiles] = useState(null);
   // being mocked rn, but this should send a post and retrieve if the requirements are met data for each PDF
-  const [requirementsList, setRequirementsList] = React.useState(pdfRequirementsMet.files);
+  const [requirementsList, setRequirementsList] = useState(pdfRequirementsMet.files);
 
   const update = (next) => {
     setPage(next);

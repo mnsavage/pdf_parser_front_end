@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box';
 import pageOption from '../../utils/pageOption';
@@ -9,8 +9,8 @@ import FileList from '../../components/FileList/FileList';
 import './Confirm.css';
 
 const Confirm = ({ setPage, uploadedFiles }) => {
-const [url, setUrl] = React.useState('');
-const [selectedIndex, setSelectedIndex] = React.useState(0);
+const [url, setUrl] = useState('');
+const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
