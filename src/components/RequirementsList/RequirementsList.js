@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -13,8 +13,8 @@ import PropTypes from 'prop-types';
 import './RequirementsList.css';
 
 const RequirementsList = ({ requirementsList, disabled, showUnmet }) => {
-  const [checked, setChecked] = React.useState([]);
-  const [open, setOpen] = React.useState([]);
+  const [checked, setChecked] = useState([]);
+  const [open, setOpen] = useState([]);
 
   // inits checkboxes
   useEffect(() => {
@@ -54,7 +54,7 @@ const RequirementsList = ({ requirementsList, disabled, showUnmet }) => {
   };
 
   return (
-        <List>
+    <List key='list'>
       {requirementsList.map((value) => {
         return (
           <>
