@@ -13,6 +13,7 @@ import './Inspect.css';
 
 const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [metConditions, setMetConditions] = React.useState([]);
   const [editing, setEditing] = React.useState(false);
   const [showUnmet, setShowUnmet] = React.useState(false);
   const [url, setUrl] = React.useState('');
@@ -20,6 +21,22 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
   useEffect(() => {
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
   }, [selectedIndex]);
+
+  useEffect(() => {
+    var requirementArray = [];
+    var metArray = [];
+    requirementsList.map((file) => {
+      console.log(file);
+      file.header.map((header) => {
+        header.requirements.map((req) => {
+          metArray[req.title] = req.met;
+        })
+      })
+      // const [requirements, setRequirements] = React.useState(metArray);
+      requirementArray.push({requirements: [], setRequirements: []});
+    })
+    setMetConditions(requirementArray);
+  }, []);
 
   const handleEditClick = () => {
     setEditing(!editing);   
@@ -53,7 +70,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
         <div className='right-list-container'>
           <FormControlLabel control={<Switch onChange={handleUnmetSwitch} />} label='Show only unmet conditons' className='switch' />
           <div className='requirements-list-container'>
-            <RequirementsList requirementsList={requirementsList[selectedIndex].header} disabled={!editing} showUnmet={showUnmet} />
+            <RequirementsList requirementsList={requirementsList[selectedIndex].header} metConditions={metConditions[selectedIndex]} disabled={!editing} showUnmet={showUnmet} />
           </div>
         </div>
       </div>

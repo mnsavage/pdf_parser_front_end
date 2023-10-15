@@ -12,12 +12,13 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import './RequirementsList.css';
 
-const RequirementsList = ({ requirementsList, disabled, showUnmet }) => {
+const RequirementsList = ({ requirementsList, metConditions, disabled, showUnmet }) => {
   const [checked, setChecked] = React.useState([]);
   const [open, setOpen] = React.useState([]);
 
   // inits checkboxes
   useEffect(() => {
+    console.log(metConditions);
     setChecked([]);
     requirementsList.map((header) => {
       header.requirements.map((req) => {
@@ -26,7 +27,7 @@ const RequirementsList = ({ requirementsList, disabled, showUnmet }) => {
         }
       })
     })
-  }, [requirementsList]);
+  }, [metConditions]);
 
   // when the user opens/ closes the drop down
   const handleOpen = (value) => () => {
@@ -43,14 +44,14 @@ const RequirementsList = ({ requirementsList, disabled, showUnmet }) => {
   // when the user checks/ unchecks a box
   const handleCheck = (value) => () => {
     if (disabled) {return;}
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-    setChecked(newChecked);
+    // const currentIndex = checked.indexOf(value);
+    // const newChecked = [...checked];
+    // if (currentIndex === -1) {
+    //   newChecked.push(value);
+    // } else {
+    //   newChecked.splice(currentIndex, 1);
+    // }
+    // setChecked(newChecked);
   };
 
   return (
@@ -102,7 +103,7 @@ const RequirementsList = ({ requirementsList, disabled, showUnmet }) => {
                   >
                     <ListItemIcon key={`ListItemIcon-${req.title}`} >
                       <Checkbox
-                        checked={checked.indexOf(req.title) !== -1}
+                        checked={metConditions ? metConditions.requirements[req.title] : false}
                         tabIndex={-1}
                         key={`Checkbox-${req.title}`}
                         disableRipple
@@ -135,6 +136,7 @@ const RequirementsList = ({ requirementsList, disabled, showUnmet }) => {
 
 RequirementsList.propTypes = {
     requirementsList: PropTypes.array.isRequired,
+    metConditions: PropTypes.object.isRequired,
     disabled: PropTypes.bool.isRequired,
     showUnmet: PropTypes.bool.isRequired,
 };
