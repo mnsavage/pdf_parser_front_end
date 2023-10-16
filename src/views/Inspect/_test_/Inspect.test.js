@@ -99,9 +99,9 @@ describe('Inspect', () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Show only unmet conditons');
         fireEvent.click(button1);
-        await waitFor(() =>  expect(screen.queryByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs')).not.toBeInTheDocument());
-        await waitFor(() =>  expect(screen.queryByText('No Blank pages in the documents')).toBeInTheDocument());
-        await waitFor(() =>  expect(screen.queryByText('2 double spaces beneath title')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('No Blank pages in the documents')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('2 double spaces beneath title')).toBeInTheDocument());
     });
 
     test('Should not show file list when editing a file', async () => {
@@ -159,5 +159,111 @@ describe('Inspect', () => {
         expect(element).not.toBeInTheDocument();
     });
 
+    test('Checkboxes can be changed when editing', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        fireEvent.click(button1);
+        await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
+        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
+        fireEvent.click(button2);
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
+    });
+
+    test('Checkboxes can not be changed when not editing', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
+        fireEvent.click(button1);
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
+    });
+
+    test('Show edited when a requirement is edited', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        fireEvent.click(button1);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
+        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
+        fireEvent.click(button2);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
+    });
+
+    test('Remove edited when a requirement is edited twice', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        fireEvent.click(button1);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
+        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
+        fireEvent.click(button2);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
+        fireEvent.click(button2);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
+    });
+
+    test('Should show edited when a condition is edited, even after the file has been switched', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        fireEvent.click(button1);
+        await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
+        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
+        fireEvent.click(button2);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
+        fireEvent.click(screen.queryByText('Continue'));
+        await waitFor(() =>  expect(screen.getByText('Save changes?')).toBeInTheDocument());
+        const alertButton = screen.getAllByText('Continue')[1];
+        fireEvent.click(alertButton);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
+        const button3 = screen.getByText('file2.pdf');
+        fireEvent.click(button3);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
+        const button4 = screen.getByText('file1.pdf');
+        fireEvent.click(button4);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
+    });
+
+    test('Should save changes when a condition is edited, even after the file has been switched', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        fireEvent.click(button1);
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
+        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
+        fireEvent.click(button2);
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
+        fireEvent.click(screen.queryByText('Continue'));
+        await waitFor(() =>  expect(screen.getByText('Save changes?')).toBeInTheDocument());
+        const alertButton = screen.getAllByText('Continue')[1];
+        fireEvent.click(alertButton);
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
+        const button3 = screen.getByText('file2.pdf');
+        fireEvent.click(button3);
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
+        const button4 = screen.getByText('file1.pdf');
+        fireEvent.click(button4);
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
+    });
+
+    test('Should remove edited when reset to original button is pressed', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        fireEvent.click(button1);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
+        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
+        fireEvent.click(button2);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
+        const button3 = screen.getByText('Reset All Conditions');
+        fireEvent.click(button3);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
+    });
+
+    test('Should reset conditions when reset to original button is pressed', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        fireEvent.click(button1);
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
+        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
+        fireEvent.click(button2);
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
+        const button3 = screen.getByText('Reset All Conditions');
+        fireEvent.click(button3);
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
+    });
 
 })

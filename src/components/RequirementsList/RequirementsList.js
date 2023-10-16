@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -12,22 +12,8 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import './RequirementsList.css';
 
-const RequirementsList = ({ requirementsList, metConditions, disabled, showUnmet }) => {
-  const [checked, setChecked] = React.useState([]);
-  const [open, setOpen] = React.useState([]);
-
-  // inits checkboxes
-  useEffect(() => {
-    console.log(metConditions);
-    setChecked([]);
-    requirementsList.map((header) => {
-      header.requirements.map((req) => {
-        if (req.met) {
-          setChecked(prevChecked => [...prevChecked, req.title]);
-        }
-      })
-    })
-  }, [metConditions]);
+const RequirementsList = ({ requirementsList, metConditions, setMetConditions, disabled, showUnmet }) => {
+  const [open, setOpen] = useState([]);
 
   // when the user opens/ closes the drop down
   const handleOpen = (value) => () => {
@@ -43,15 +29,16 @@ const RequirementsList = ({ requirementsList, metConditions, disabled, showUnmet
 
   // when the user checks/ unchecks a box
   const handleCheck = (value) => () => {
-    if (disabled) {return;}
-    // const currentIndex = checked.indexOf(value);
-    // const newChecked = [...checked];
-    // if (currentIndex === -1) {
-    //   newChecked.push(value);
-    // } else {
-    //   newChecked.splice(currentIndex, 1);
-    // }
-    // setChecked(newChecked);
+    if (disabled) {return}
+    var newCond = [];
+    for (var key in metConditions) {
+      if (key == value) {
+        newCond[key] = {met: !metConditions[value].met, edited: !metConditions[value].edited};
+      } else {
+        newCond[key] = metConditions[key];
+      }
+    }
+    setMetConditions(newCond);
   };
 
   return (
@@ -90,40 +77,50 @@ const RequirementsList = ({ requirementsList, metConditions, disabled, showUnmet
             unmountOnExit
           >
             <List component='div' key={`List-${value.title}`}>
-              {value.requirements.filter(value => !showUnmet || checked.indexOf(value.title) == -1 ).map((req => {
+              {value.requirements.filter(value => !showUnmet || metConditions[value.title].met ).map((req => {
                 return (
-                <ListItem
-                  key={`ListItem-${req.title}`}
-                  className='list-requirement'
-                >
-                  <ListItemButton  
-                    key={`ListItemButton-${req.title}`} 
-                    role={undefined} 
+                  <ListItemButton
+                    key={`ListItemButton-${req.title}`}
+                    role={undefined}
                     onClick={handleCheck(req.title)}
                   >
-                    <ListItemIcon key={`ListItemIcon-${req.title}`} >
-                      <Checkbox
-                        checked={metConditions ? metConditions.requirements[req.title] : false}
-                        tabIndex={-1}
-                        key={`Checkbox-${req.title}`}
-                        disableRipple
-                        id={`Checkbox-${req.title}`}
-                      />
-                    </ListItemIcon>
-                    <ListItemText 
-                      className='requirement-text' 
-                      key={`ListItemText-${req.title}`} 
-                      disabletypography='true' 
-                      primary={
-                        <Typography 
-                          key={`Typography-${req.title}`}  
-                          variant='body3'
+                    <List key={`List-${req.title}`} className='sublist'>
+                      <ListItem key={`outerListItem-${req.title}`}>
+                        <ListItemIcon key={`ListItemIcon-${req.title}`}>
+                          <Checkbox
+                            checked={metConditions[req.title].met}
+                            tabIndex={-1}
+                            key={`Checkbox-${req.title}`}
+                            disableRipple
+                            id={`Checkbox-${req.title}`}
+                          />
+                        </ListItemIcon>
+                        <ListItemText
+                          className='requirement-text'
+                          key={`ListItemText-${req.title}`}
+                          disabletypography='true'
+                          primary={
+                            <Typography
+                              key={`Typography-${req.title}`}
+                              variant='body3'
+                            >
+                              {req.title}
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                      {metConditions[req.title].edited && 
+                        <Typography
+                        key={`Typography-edited-${req.title}`}
+                        className='edited-symbol'
+                        variant='body4'
                         >
-                          {req.title}
-                        </Typography>} 
-                    />
+                          edited
+                        </Typography>
+                      }
+                    </List>
                   </ListItemButton>
-                </ListItem>);
+                );
               }))}
             </List>
           </Collapse>
@@ -136,7 +133,8 @@ const RequirementsList = ({ requirementsList, metConditions, disabled, showUnmet
 
 RequirementsList.propTypes = {
     requirementsList: PropTypes.array.isRequired,
-    metConditions: PropTypes.object.isRequired,
+    metConditions: PropTypes.array.isRequired,
+    setMetConditions: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired,
     showUnmet: PropTypes.bool.isRequired,
 };
