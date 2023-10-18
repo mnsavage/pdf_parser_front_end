@@ -37,6 +37,16 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
     setSelectedMetConditions(metConditions[selectedIndex]);
   }, [selectedIndex]);
 
+  // Check if any edits were made
+  const checkEdits = () => {
+    for (var key in selectedMetConditions) {
+      if (selectedMetConditions[key].met != metConditions[selectedIndex][key].met) {
+        return false;
+      }
+    }
+    return true;  
+  };
+
   const handleEditClick = () => {
     // if done editing, update the met conditions
     if (editing == true) {
@@ -94,7 +104,8 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
         title='Save changes?' 
         desc='Continue to save edits to the requirements.' 
         continueAction={() => {
-          setEditAlertOpen(false);handleEditClick();
+          setEditAlertOpen(false);
+          handleEditClick();
         }} 
         backAction={() => {
           setEditAlertOpen(false)
@@ -167,7 +178,11 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
         )}
         <ContinueButton action={() => {
           if (editing) {
-            setEditAlertOpen(true);
+            if (checkEdits()) {
+              setEditing(false);
+            } else {
+              setEditAlertOpen(true);
+            }
           } else {
             setAlertOpen(true);
           }
