@@ -40,6 +40,11 @@ const theme = createTheme({
       color: '#000000',
       fontFamily: ['Roboto','Helvetica','Arial','sans-serif']
     },
+    body4: {
+      fontSize: 18,
+      color: '#9E1B32',
+      fontFamily: ['Roboto','Helvetica','Arial','sans-serif']
+    },
     button: {
       textTransform: 'none',
       fontSize: '20px',

@@ -9,3 +9,13 @@
 .requirement-text {
     font-size: 10px;
 }
+
+.sublist {
+    width: 100%;
+}
+
+.edited-symbol {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
