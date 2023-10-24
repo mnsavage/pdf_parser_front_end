@@ -26,7 +26,7 @@ const App = () => {
       try {
         const result = await fetchUploadGetData(apiDomain);
         setData(result);
-        console.log(`fetched data: ${result}`);
+        console.log(`fetched data: ${JSON.stringify(result, null, 4)}`);
       } catch (error) {
         // Handle the error appropriately, maybe set some error state to show an error message to the user
         console.log(`Error calling fetchUploadGetData function: ${error}`);

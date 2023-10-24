@@ -17,3 +17,4 @@ export const fetchUploadGetData = async (url) => {
       throw error;  // re-throw the error so the calling code can handle it or see that there was an error
   }
 }
+
