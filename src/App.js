@@ -23,7 +23,7 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await fetchUploadGetData(url);
+        const result = await fetchUploadGetData(apiDomain);
         setData(result);
         console.log(`fetched data: ${result}`);
       } catch (error) {
