@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 export const fetchUploadGetData = async (url) => {
-  useEffect(() => {
-    // Extract the API URL from the imported JSON file
-    const API_URL = `${url}upload`;
-    console.log(`upload API url: ${API_URL}`);
+  const API_URL = `${url}upload`;
+  console.log(`upload API url: ${API_URL}`);
+  
+  try {
+      const response = await fetch(API_URL);
 
-    // Use the Fetch API to make the GET request
-    fetch(API_URL)
-      .then((response) => {
-        if(!response.ok){ // check status code
+      if (!response.ok) { 
           throw new Error(`HTTP error, status = ${response.status}`);
-        }
-        return response.json();
-      })
-      .catch((error) => console.log('Error fetching get data from API:', error));
-  }, []);
+      }
+      return await response.json();
+
+  } catch (error) {
+      console.error('Error fetching get data from API:', error);
+      throw error;  // re-throw the error so the calling code can handle it or see that there was an error
+  }
 }
