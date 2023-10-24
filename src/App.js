@@ -19,8 +19,10 @@ const App = () => {
   // fetch get data from upload API
   const apiDomain = jsonData.apiURL
   console.log(`API domain: ${apiDomain}`);
+
   const getUploadData = fetchUploadGetData(apiDomain);
   console.log(`Get API Response:\n${console.log(JSON.stringify(getUploadData, null, 4))}`);
+
 
   const update = (next) => {
     setPage(next);
