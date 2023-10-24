@@ -20,6 +20,7 @@ const App = () => {
   // fetch get data from upload API
   const apiDomain = jsonData.apiURL
   console.log(`API domain: ${apiDomain}`);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
