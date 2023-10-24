@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react'; 
 import { ThemeProvider } from '@mui/material/styles'
 import Header from './components/Header/Header'
 import Title from './components/Title/Title'
@@ -19,8 +19,9 @@ const App = () => {
   // fetch get data from upload API
   const apiDomain = jsonData.apiURL
   console.log(`API domain: ${apiDomain}`);
-  const getUploadData = fetchUploadGetData(apiDomain);
-  console.log(`Get API Response:\n${console.log(JSON.stringify(getUploadData, null, 4))}`);
+  useEffect(async () =>{
+    console.log(`GET response from API:${await fetchUploadGetData(apiDomain)}`);
+  });
 
   const update = (next) => {
     setPage(next);
