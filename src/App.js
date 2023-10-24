@@ -14,14 +14,26 @@ import jsonData from './config.json';
 const App = () => {
   const [page, setPage] = useState(pageOption.Upload);
   const [uploadedFiles, setUploadedFiles] = useState(null);
+  const [data, setData] = useState(null);
   // being mocked rn, but this should send a post and retrieve if the requirements are met data for each PDF
   const [requirementsList, setRequirementsList] = useState(pdfRequirementsMet.files);
   // fetch get data from upload API
   const apiDomain = jsonData.apiURL
   console.log(`API domain: ${apiDomain}`);
-  useEffect(async () =>{
-    console.log(`GET response from API:${await fetchUploadGetData(apiDomain)}`);
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await fetchUploadGetData(url);
+        setData(result);
+        console.log(`fetched data: ${result}`);
+      } catch (error) {
+        // Handle the error appropriately, maybe set some error state to show an error message to the user
+        console.log(`Error calling fetchUploadGetData function: ${error}`);
+      }
+    };
+
+    fetchData();
+  }, [apiDomain]);
 
   const update = (next) => {
     setPage(next);
