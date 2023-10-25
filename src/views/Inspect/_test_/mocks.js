@@ -3,6 +3,9 @@ const pdfRequirementsMet = {
     files: [
         {
             name: 'file1.pdf',
+            newName: 'lname1.fname1.dissertation',
+            fname: 'fname1',
+            lname: 'lname1',
             header: [
                 {
                     title: 'Page Formatting & Font',
@@ -30,6 +33,9 @@ const pdfRequirementsMet = {
         },
         {
             name: 'file2.pdf',
+            newName: 'lname2.fname2.thesis',
+            fname: 'fname2',
+            lname: 'lname2',
             header: [
                 {
                     title: 'Page Formatting & Font',
@@ -57,6 +63,9 @@ const pdfRequirementsMet = {
         },
         {
             name: 'file3.pdf',
+            newName: 'lname3.fname3.dissertation',
+            fname: 'fname3',
+            lname: 'lname3',
             header: [
                 {
                     title: 'Page Formatting & Font',
