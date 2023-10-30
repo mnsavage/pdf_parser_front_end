@@ -8,6 +8,7 @@ import UnderlineHeader from '../../components/UnderlineHeader/UnderlineHeader';
 import FileList from '../../components/FileList/FileList';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import Alert from '../../components/Alert/Alert';
+import CreateSummary from './CreateSummary/CreateSummary';
 import PropTypes from 'prop-types';
 import RequirementsList from '../../components/RequirementsList/RequirementsList';
 import './Inspect.css';
@@ -170,6 +171,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
                   variant='contained'
                   className='secondary-button'
                   color='secondary'
+                  onClick={() => {CreateSummary(requirementsList, metConditions);}}
                 >
                   Download Summaries
               </Button>
