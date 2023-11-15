@@ -8,7 +8,7 @@ import Inspect from './views/Inspect/Inspect';
 import theme from './utils/theme';
 import pageOption from './utils/pageOption';
 import pdfRequirementsMet from './views/Inspect/_test_/mocks';
-import {fetchUploadGetData} from './services/api'
+import { fetchUploadGetData } from './services/api'
 import jsonData from './config.json';
 
 const App = () => {
