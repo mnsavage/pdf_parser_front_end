@@ -244,7 +244,7 @@ describe('RequirementsList', () => {
     });
 
     test('Should not edit the comment in the comment box when disabled', async () => {
-        setComments = jest.fn()
+        const setComments = jest.fn()
         render(
             <RequirementsList 
                 requirementsList={RequirementsListMocks.pdfRequirementsMet} 
@@ -269,7 +269,7 @@ describe('RequirementsList', () => {
     });
 
     test('Should edit the comment in the comment box when not disabled', async () => {
-        setComments = jest.fn()
+        const setComments = jest.fn()
         render(
             <RequirementsList 
                 requirementsList={RequirementsListMocks.pdfRequirementsMet} 
@@ -294,7 +294,7 @@ describe('RequirementsList', () => {
     });
 
     test('Should edit the comment in the comment box when not disabled and no comment initialized', async () => {
-        setComments = jest.fn()
+        const setComments = jest.fn()
         render(
             <RequirementsList 
                 requirementsList={RequirementsListMocks.pdfRequirementsMet} 
