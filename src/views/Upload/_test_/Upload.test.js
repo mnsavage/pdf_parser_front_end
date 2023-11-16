@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
+import { act } from 'react-dom/test-utils';
 import Upload from '../Upload';
 
 describe('Upload', () => {
@@ -24,7 +26,9 @@ describe('Upload', () => {
     test('Render alert when the Continue button is pressed and no files are uploaded', async () => {
         render(<Upload setPage={jest.fn()} setUploadedFiles={jest.fn()}/>);
         const button = screen.getByText('Continue');
-        fireEvent.click(button);
+        await act(() => {
+            userEvent.click(button);
+        });
         await waitFor(() =>  expect(screen.getByText('Please select files to upload')).toBeInTheDocument());
     });
 
@@ -44,5 +48,24 @@ describe('Upload', () => {
         render(<Upload setPage={jest.fn()} setUploadedFiles={jest.fn()}/>);
         const label = screen.queryByText('Attached Files');
         expect(label).not.toBeInTheDocument();
+    });
+
+    test('Should not render alert when the Continue button is pressed and files are uploaded', async () => {
+        render(<Upload setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()}/>);
+        const button = screen.getByText('Continue');
+        await act(() => {
+            userEvent.click(button);
+        });
+        await waitFor(() =>  expect(screen.queryByText('Please select files to upload')).not.toBeInTheDocument());
+    });
+
+    test('Should go to next page when the Continue button is pressed and files are uploaded', async () => {
+        const setPage = jest.fn()
+        render(<Upload setPage={setPage} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()}/>);
+        const button = screen.getByText('Continue');
+        await act(() => {
+            userEvent.click(button);
+        });
+        await waitFor(() =>  expect(setPage).toHaveBeenCalled());
     });
 })
