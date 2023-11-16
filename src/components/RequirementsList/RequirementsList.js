@@ -85,7 +85,7 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
             >
               <ListItemText 
                 key={`ListItemText-${value.title}`} 
-                disableTypography='true' 
+                disableTypography="true"
                 className='header-title' 
                 primary={
                   <Typography 
@@ -132,7 +132,7 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
                           <ListItemText
                             className='requirement-text'
                             key={`ListItemText-${req.title}`}
-                            disabletypography='true'
+                            disabletypography="true"
                             primary={<Typography
                               key={`Typography-${req.title}`}
                               variant='body3'
@@ -158,7 +158,10 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
                           disableRipple
                       >
                         <ListItemIcon key={`ListItemIconComment-${req.title}`}>
-                          <Comment className='comment'/>
+                          <Comment
+                            className='comment'
+                            key={`CommentIcon-${req.title}`}
+                          />
                         </ListItemIcon>
                       </ListItemButton>
                     </ListItem>
