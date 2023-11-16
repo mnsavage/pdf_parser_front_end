@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
+import { act } from 'react-dom/test-utils';
 import pdfRequirementsMet from './mocks';
 import Inspect from '../Inspect';
 
@@ -33,7 +35,9 @@ describe('Inspect', () => {
     test('Renders alert when continue is pressed', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button = screen.getByText('Continue');
-        fireEvent.click(button);
+        await act(() => {
+            userEvent.click(button);
+        });
         await waitFor(() =>  expect(screen.getByText('Are you sure you want to continue?')).toBeInTheDocument());
     });
 
@@ -41,20 +45,28 @@ describe('Inspect', () => {
         const setUploadedFiles = jest.fn();
         render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={setUploadedFiles} requirementsList={pdfRequirementsMet.files} />);
         const button = screen.getByText('Continue');
-        fireEvent.click(button)
+        await act(() => {
+            userEvent.click(button)
+        });
         await waitFor(() =>  expect(screen.getByText('Are you sure you want to continue?')).toBeInTheDocument());
         const alertButton = screen.getAllByText('Continue')[1];
-        fireEvent.click(alertButton);
+        await act(() => {
+            userEvent.click(alertButton);
+        });
         expect(setUploadedFiles).toHaveBeenCalledWith(null);
     });
 
     test('Stays on the same page when back on the alert is pressed', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button = screen.getByText('Continue');
-        fireEvent.click(button)
+        await act(() => {
+            userEvent.click(button)
+        });
         await waitFor(() =>  expect(screen.getByText('Are you sure you want to continue?')).toBeInTheDocument());
         const alertButton = screen.getByText('Back');
-        fireEvent.click(alertButton);
+        await act(() => {
+            userEvent.click(alertButton);
+        });
         await waitFor(() =>  expect(screen.queryByText('Are you sure you want to continue?')).not.toBeInTheDocument());
         const element = screen.getByText('Uploaded Files');
         expect(element).toBeInTheDocument();
@@ -88,17 +100,23 @@ describe('Inspect', () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()}  requirementsList={pdfRequirementsMet.files}/>);
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
         const button1 = screen.getByText('file2.pdf');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
         const button2 = screen.getByText('file3.pdf');
-        fireEvent.click(button2);
+        await act(() => {
+            userEvent.click(button2);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
     });
 
     test('Selecting the show unmet conditions toggle only shows unmet conditions', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Show only unmet conditons');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs')).toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('No Blank pages in the documents')).not.toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('2 double spaces beneath title')).toBeInTheDocument());
@@ -107,14 +125,18 @@ describe('Inspect', () => {
     test('Should not show file list when editing a file', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
     });
 
     test('Should show correct buttons when editing a file', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryByText('Edit/ View Selected File')).not.toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('Download Summaries')).not.toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
@@ -124,9 +146,13 @@ describe('Inspect', () => {
     test('Does not render alert when continue is pressed when editing a file if no edits are made', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
-        fireEvent.click(screen.queryByText('Continue'));
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
         await waitFor(() =>  expect(screen.queryByText('Save changes?')).not.toBeInTheDocument());
         const element = screen.queryByText('Uploaded Files');
         expect(element).toBeInTheDocument();
@@ -135,26 +161,40 @@ describe('Inspect', () => {
     test('Should render alert when continue is pressed when editing a file if edits are made', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
-        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button2);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
-        fireEvent.click(screen.queryByText('Continue'));
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
         await waitFor(() =>  expect(screen.getByText('Save changes?')).toBeInTheDocument());
     });
 
     test('Should not render alert when continue is pressed when editing a file if edits are made but then reversed', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
-        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button2);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
-        fireEvent.click(button2);
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
-        fireEvent.click(screen.queryByText('Continue'));
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
         await waitFor(() =>  expect(screen.queryByText('Save changes?')).not.toBeInTheDocument());
         const element = screen.queryByText('Uploaded Files');
         expect(element).toBeInTheDocument();
@@ -163,9 +203,13 @@ describe('Inspect', () => {
     test('Should render the file list and correct buttons when continue on the alert is pressed when editing a file', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
-        fireEvent.click(screen.queryByText('Continue'));
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
         await waitFor(() =>  expect(screen.queryByText('Edit/ View Selected File')).toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('Download Summaries')).toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('Reset All Conditions')).not.toBeInTheDocument());
@@ -175,15 +219,23 @@ describe('Inspect', () => {
     test('Stays on the same page when back on the alert is pressed when editing a file', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
-        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button2);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
-        fireEvent.click(screen.queryByText('Continue'));
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
         await waitFor(() =>  expect(screen.getByText('Save changes?')).toBeInTheDocument());
         const alertButton = screen.getByText('Back');
-        fireEvent.click(alertButton);
+        await act(() => {
+            userEvent.click(alertButton);
+        });
         await waitFor(() =>  expect(screen.queryByText('Save changes?')).not.toBeInTheDocument());
         const element = screen.queryByText('Uploaded Files');
         expect(element).not.toBeInTheDocument();
@@ -192,108 +244,372 @@ describe('Inspect', () => {
     test('Checkboxes can be changed when editing', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
-        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button2);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
     });
 
     test('Checkboxes can not be changed when not editing', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
-        const button1 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button1);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
     });
 
     test('Show edited when a requirement is edited', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
-        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button2);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
     });
 
     test('Remove edited when a requirement is edited twice', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
-        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button2);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
-        fireEvent.click(button2);
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
     });
 
     test('Should show edited when a condition is edited, even after the file has been switched', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
-        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button2);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
-        fireEvent.click(screen.queryByText('Continue'));
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
         await waitFor(() =>  expect(screen.getByText('Save changes?')).toBeInTheDocument());
         const alertButton = screen.getAllByText('Continue')[1];
-        fireEvent.click(alertButton);
+        await act(() => {
+            userEvent.click(alertButton);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
         const button3 = screen.getByText('file2.pdf');
-        fireEvent.click(button3);
+        await act(() => {
+            userEvent.click(button3);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
         const button4 = screen.getByText('file1.pdf');
-        fireEvent.click(button4);
+        await act(() => {
+            userEvent.click(button4);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
     });
 
     test('Should save changes when a condition is edited, even after the file has been switched', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
-        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button2);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
-        fireEvent.click(screen.queryByText('Continue'));
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
         await waitFor(() =>  expect(screen.getByText('Save changes?')).toBeInTheDocument());
         const alertButton = screen.getAllByText('Continue')[1];
-        fireEvent.click(alertButton);
+        await act(() => {
+            userEvent.click(alertButton);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
         const button3 = screen.getByText('file2.pdf');
-        fireEvent.click(button3);
+        await act(() => {
+            userEvent.click(button3);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
         const button4 = screen.getByText('file1.pdf');
-        fireEvent.click(button4);
+        await act(() => {
+            userEvent.click(button4);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
     });
 
     test('Should remove edited when reset to original button is pressed', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
-        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button2);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
         const button3 = screen.getByText('Reset All Conditions');
-        fireEvent.click(button3);
+        await act(() => {
+            userEvent.click(button3);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
     });
 
     test('Should reset conditions when reset to original button is pressed', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
         const button1 = screen.getByText('Edit/ View Selected File');
-        fireEvent.click(button1);
+        await act(() => {
+            userEvent.click(button1);
+        });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
-        const button2 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
-        fireEvent.click(button2);
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[0]);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
         const button3 = screen.getByText('Reset All Conditions');
-        fireEvent.click(button3);
+        await act(() => {
+            userEvent.click(button3);
+        });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
+    });
+
+    test('Should not open comment box on initial render', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
+    });
+
+    test('Should not open comment box on initial render when the comment button is pressed', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const commentButtons = screen.getAllByTestId('comment-button')
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument());
+    });
+
+    test('Should open comment box when editing', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        const commentButtons = screen.getAllByTestId('comment-button')
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).toBeInTheDocument());
+    });
+
+    test('Should change comment in comment box when editing', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        const commentButtons = screen.getAllByTestId('comment-button')
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).toBeInTheDocument());
+        const commentBox = screen.queryByLabelText('Comment')
+        await act(() => {
+            userEvent.type(commentBox, 'adding content')
+        });
+        await waitFor(() =>  expect(screen.queryByText('adding content')).toBeInTheDocument());
+    });
+
+    test('Should save comment after clicking another comment', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        const commentButtons = screen.getAllByTestId('comment-button')
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).toBeInTheDocument());
+        const commentBox = screen.queryByLabelText('Comment')
+        await act(() => {
+            userEvent.type(commentBox, 'adding content')
+        });
+        await waitFor(() =>  expect(screen.queryByText('adding content')).toBeInTheDocument());
+        await act(() => {
+            userEvent.click(commentButtons[1]);
+        });
+        await waitFor(() =>  expect(screen.queryByText('adding content')).not.toBeInTheDocument());
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });
+        await waitFor(() =>  expect(screen.queryByText('adding content')).toBeInTheDocument());
+    });
+
+    test('Should save comment after another file is switched to', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        const commentButtons = screen.getAllByTestId('comment-button')
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).toBeInTheDocument());
+        const commentBox = screen.queryByLabelText('Comment')
+        await act(() => {
+            userEvent.type(commentBox, 'adding content')
+        });
+        await waitFor(() =>  expect(screen.queryByText('adding content')).toBeInTheDocument());
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
+        await waitFor(() =>  expect(screen.getByText('Save changes?')).toBeInTheDocument());
+        const alertButton = screen.getAllByText('Continue')[1];
+        await act(() => {
+            userEvent.click(alertButton);
+        });
+        await waitFor(() =>  expect(screen.getByText('file2.pdf')).toBeInTheDocument());
+        const button3 = screen.getByText('file2.pdf');
+        await act(() => {
+            userEvent.click(button3);
+        });
+        const button4 = screen.getByText('file1.pdf');
+        await act(() => {
+            userEvent.click(button4);
+        });
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });
+        await waitFor(() =>  expect(screen.queryByText('adding content')).toBeInTheDocument());
+    });
+
+    test('Should not have comment boxes open when a file is switched', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        const commentButtons = screen.getAllByTestId('comment-button')
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).toBeInTheDocument());
+        const commentBox = screen.queryByLabelText('Comment')
+        await act(() => {
+            userEvent.type(commentBox, 'adding content')
+        });
+        await waitFor(() =>  expect(screen.queryByText('adding content')).toBeInTheDocument());
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
+        await waitFor(() =>  expect(screen.getByText('Save changes?')).toBeInTheDocument());
+        const alertButton = screen.getAllByText('Continue')[1];
+        await act(() => {
+            userEvent.click(alertButton);
+        });
+        await waitFor(() =>  expect(screen.getByText('file2.pdf')).toBeInTheDocument());
+        const button3 = screen.getByText('file2.pdf');
+        await act(() => {
+            userEvent.click(button3);
+        });
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument());
+    });
+
+    test('Should be able to view comment box that has a comment after editing', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        const commentButtons = screen.getAllByTestId('comment-button');
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).toBeInTheDocument());
+        const commentBox = screen.queryByLabelText('Comment');
+        await act(() => {
+            userEvent.type(commentBox, 'adding content');
+        });
+        await waitFor(() =>  expect(screen.queryByText('adding content')).toBeInTheDocument());
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
+        await waitFor(() =>  expect(screen.getByText('Save changes?')).toBeInTheDocument());
+        const alertButton = screen.getAllByText('Continue')[1];
+        await act(() => {
+            userEvent.click(alertButton);
+        });
+        await waitFor(() =>  expect(screen.getByText('file2.pdf')).toBeInTheDocument());
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).toBeInTheDocument());
+    });
+
+    test('Should not be able to edit comment box that has a comment after editing', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        const commentButtons = screen.getAllByTestId('comment-button')
+        await act(() => {
+            userEvent.click(commentButtons[0]);
+        });   
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).toBeInTheDocument());
+        const commentBox = screen.queryByLabelText('Comment')
+        await act(() => {
+            userEvent.type(commentBox, 'adding content')
+        });
+        await waitFor(() =>  expect(screen.queryByText('adding content')).toBeInTheDocument());
+        await act(() => {
+            userEvent.click(screen.queryByText('Continue'));
+        });
+        await waitFor(() =>  expect(screen.getByText('Save changes?')).toBeInTheDocument());
+        const alertButton = screen.getAllByText('Continue')[1];
+        await act(() => {
+            userEvent.click(alertButton);
+        });
+        await waitFor(() =>  expect(screen.getByText('file2.pdf')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByLabelText('Comment')).toBeInTheDocument());
+        await act(() => {
+            userEvent.type(commentBox, 'adding new content')
+        });
+        await waitFor(() =>  expect(screen.queryByText('adding new content')).not.toBeInTheDocument());
     });
 
 })

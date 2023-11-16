@@ -25,8 +25,20 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
       return metArray;
     })
   );
+  const [comments, setComments] = useState(
+    requirementsList.map((file) => {
+      var commentsArray = [];
+      file.header.map((header) => {
+        header.requirements.map((req) => {
+          commentsArray[req.title] = '';
+        })
+      })
+      return commentsArray;
+    })
+  );
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedMetConditions, setSelectedMetConditions] = useState(metConditions[selectedIndex]);
+  const [selectedComments, setSelectedComments] = useState(comments[selectedIndex]);
   const [editing, setEditing] = useState(false);
   const [showUnmet, setShowUnmet] = useState(false);
   const [url, setUrl] = useState('');
@@ -36,6 +48,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
   useEffect(() => {
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
     setSelectedMetConditions(metConditions[selectedIndex]);
+    setSelectedComments(comments[selectedIndex])
   }, [selectedIndex]);
 
   // Check if any edits were made
@@ -44,13 +57,17 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
       if (selectedMetConditions[key].met != metConditions[selectedIndex][key].met) {
         return false;
       }
+      if (selectedComments[key] != comments[selectedIndex][key]) {
+        return false;
+      }
     }
     return true;  
   };
 
   const handleEditClick = () => {
-    // if done editing, update the met conditions
+    // if done editing, update the met conditions and comments
     if (editing == true) {
+      // update met conditions
       const newConditions = metConditions.map((conditon, index) => {
         if (index == selectedIndex) {
           return selectedMetConditions;
@@ -59,6 +76,16 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
         }
       })
       setMetConditions(newConditions);
+
+      // update met comments
+      const newComments = comments.map((comment, index) => {
+        if (index == selectedIndex) {
+          return selectedComments;
+        } else {
+          return comment;
+        }
+      })
+      setComments(newComments);
     }
     setEditing(!editing);   
   };
@@ -133,7 +160,9 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
             <RequirementsList 
               requirementsList={requirementsList[selectedIndex].header} 
               metConditions={selectedMetConditions} 
-              setMetConditions={setSelectedMetConditions} 
+              setMetConditions={setSelectedMetConditions}
+              comments={selectedComments} 
+              setComments={setSelectedComments} 
               disabled={!editing} 
               showUnmet={showUnmet} 
             />
@@ -171,7 +200,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
                   variant='contained'
                   className='secondary-button'
                   color='secondary'
-                  onClick={() => {CreateSummary(requirementsList, metConditions);}}
+                  onClick={() => {CreateSummary(requirementsList, metConditions, comments);}}
                 >
                   Download Summaries
               </Button>
