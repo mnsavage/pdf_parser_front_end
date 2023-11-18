@@ -50,6 +50,16 @@ const RequirementsListMocks = {
             met: true,
             edited: false
         }
+    },
+    commentsInitial: {
+        'Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs': '',
+        'No Blank pages in the documents': '',
+        '2 double spaces beneath title': ''
+    },
+    commentsEdited: {
+        'Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs': 'Mock comment 1',
+        'No Blank pages in the documents': 'Mock comment 2',
+        '2 double spaces beneath title': ''
     }
 };
 

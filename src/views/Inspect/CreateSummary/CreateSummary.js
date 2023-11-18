@@ -2,7 +2,7 @@ import React from 'react';
 import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, AlignmentType, ExternalHyperlink, WidthType, CheckBox, ShadingType } from 'docx';
 import { saveAs } from 'file-saver'
 
-const CreateSummary = (requirementsList, metConditions) => {
+const CreateSummary = (requirementsList, metConditions, comments) => {
 
     const getDate = () => {
         var today = new Date();
@@ -58,7 +58,19 @@ const CreateSummary = (requirementsList, metConditions) => {
                             }),
                         ],
                     }),
-                    ],
+                    ].concat(headerData.requirements
+                        .filter((requirement) => {
+                            return comments[index][requirement.title] !== ''
+                        })
+                        .map((requirement) => {
+                        return new Paragraph({
+                            style: 'tableBody',
+                            text: `${comments[index][requirement.title]}`,
+                            bullet: {
+                                level: 0
+                            }
+                        });
+                      })),
                   }),
             ],
         });

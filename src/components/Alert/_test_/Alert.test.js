@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
+import { act } from 'react-dom/test-utils';
 import Alert from '../Alert';
 
 describe('Alert', () => {
@@ -39,7 +41,7 @@ describe('Alert', () => {
         expect(button).toBeInTheDocument();
     });
 
-    test('calls continue action when clicked', () => {
+    test('calls continue action when clicked', async () => {
         const continueAction = jest.fn();
         render(
             <Alert 
@@ -49,7 +51,9 @@ describe('Alert', () => {
             />
         );
         const button = screen.getByText('Continue');
-        fireEvent.click(button);
+        await act(() => {
+            userEvent.click(button);
+        });
         expect(continueAction).toHaveBeenCalled();
     });
 
@@ -78,7 +82,7 @@ describe('Alert', () => {
         expect(button).toBeInTheDocument();
     });
 
-    test('calls continue action when clicked', () => {
+    test('calls continue action when clicked', async () => {
         const backAction = jest.fn();
         render(
             <Alert 
@@ -89,7 +93,9 @@ describe('Alert', () => {
             />
         );
         const button = screen.getByText('Back');
-        fireEvent.click(button);
+        await act(() => {
+            userEvent.click(button);
+        });
         expect(backAction).toHaveBeenCalled();
     });
 

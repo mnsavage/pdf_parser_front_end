@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
+import { act } from 'react-dom/test-utils';
 import FileList from '../FileList';
 
 describe('FileList', () => {
@@ -13,14 +15,18 @@ describe('FileList', () => {
         expect(element3).toBeInTheDocument();
     });
 
-    test('Handels list item when a cell is clicked', () => {
+    test('Handels list item when a cell is clicked', async () => {
         const handleListItemClick = jest.fn();
         render(<FileList selectedIndex={0} files={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} handleListItemClick={handleListItemClick}/>);
         const cell0 = screen.getByText('file1.pdf');
-        fireEvent.click(cell0)
+        await act(() => {
+            userEvent.click(cell0)
+        });
         expect(handleListItemClick).toHaveBeenCalledWith(0);
         const cell1 = screen.getByText('file2.pdf');
-        fireEvent.click(cell1)
+        await act(() => {
+            userEvent.click(cell1)
+        });
         expect(handleListItemClick).toHaveBeenCalledWith(1);
     });
 
