@@ -149,7 +149,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
           <div className='left-container'>
             <UnderlineHeader title='Uploaded Files' />
             <div className='confirm-list-container'>
-              <FileList selectedIndex={selectedIndex} files={uploadedFiles} handleListItemClick={handleListItemClick} />
+              <FileList selectedIndex={selectedIndex} names={requirementsList.map((resoponse) => resoponse.newName)} handleListItemClick={handleListItemClick} />
             </div>
           </div>
         )}

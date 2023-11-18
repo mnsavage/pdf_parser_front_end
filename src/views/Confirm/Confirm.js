@@ -30,7 +30,7 @@ const [selectedIndex, setSelectedIndex] = useState(0);
         <div className='right-container'>
           <UnderlineHeader title='Uploaded Files'/>
           <div className='confirm-list-container'>
-              <FileList selectedIndex={selectedIndex} files={uploadedFiles} handleListItemClick={handleListItemClick} />
+              <FileList selectedIndex={selectedIndex} names={uploadedFiles.map((file) => file.name)} handleListItemClick={handleListItemClick} />
           </div>
         </div>
       </div>

@@ -5,10 +5,10 @@ import ListItemText from '@mui/material/ListItemText';
 import PropTypes from 'prop-types';
 import './FileList.css';
 
-const FileList = ({ selectedIndex, files, handleListItemClick }) => {
+const FileList = ({ selectedIndex, names, handleListItemClick }) => {
   return (
     <List dense={false}>
-        {files.map((value, index) => (
+        {names.map((value, index) => (
         <ListItemButton
             className='list-button'
             selected={selectedIndex == index}
@@ -16,7 +16,7 @@ const FileList = ({ selectedIndex, files, handleListItemClick }) => {
             key={index}
             disableGutters
         >
-            <ListItemText primary={value.name} />
+            <ListItemText primary={value} />
         </ListItemButton>
         ))}
     </List>
@@ -25,7 +25,7 @@ const FileList = ({ selectedIndex, files, handleListItemClick }) => {
 
 FileList.propTypes = {
     selectedIndex: PropTypes.number.isRequired,
-    files: PropTypes.array.isRequired,
+    names: PropTypes.array.isRequired,
     handleListItemClick: PropTypes.func.isRequired
 };
 

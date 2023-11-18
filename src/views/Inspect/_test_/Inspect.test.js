@@ -74,11 +74,11 @@ describe('Inspect', () => {
 
     test('Displays the list of uploaded files', () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} requirementsList={pdfRequirementsMet.files} />);
-        const element1 = screen.getByText('file1.pdf');
+        const element1 = screen.getByText('lname1.fname1.dissertation');
         expect(element1).toBeInTheDocument();
-        const element2 = screen.getByText('file2.pdf');
+        const element2 = screen.getByText('lname2.fname2.thesis');
         expect(element2).toBeInTheDocument();
-        const element3 = screen.getByText('file3.pdf');
+        const element3 = screen.getByText('lname3.fname3.dissertation');
         expect(element3).toBeInTheDocument();
     });
 
@@ -99,12 +99,12 @@ describe('Inspect', () => {
     test('Selecting a file displays corresponding information in the requirements list', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()}  requirementsList={pdfRequirementsMet.files}/>);
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
-        const button1 = screen.getByText('file2.pdf');
+        const button1 = screen.getByText('lname2.fname2.thesis');
         await act(() => {
             userEvent.click(button1);
         });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
-        const button2 = screen.getByText('file3.pdf');
+        const button2 = screen.getByText('lname3.fname3.dissertation');
         await act(() => {
             userEvent.click(button2);
         });
@@ -128,7 +128,7 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(button1);
         });
-        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('lname1.fname1.dissertation')).not.toBeInTheDocument());
     });
 
     test('Should show correct buttons when editing a file', async () => {
@@ -213,7 +213,7 @@ describe('Inspect', () => {
         await waitFor(() =>  expect(screen.queryByText('Edit/ View Selected File')).toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('Download Summaries')).toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('Reset All Conditions')).not.toBeInTheDocument());
-        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('lname1.fname1.dissertation')).toBeInTheDocument());
     });
 
     test('Stays on the same page when back on the alert is pressed when editing a file', async () => {
@@ -317,12 +317,12 @@ describe('Inspect', () => {
             userEvent.click(alertButton);
         });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
-        const button3 = screen.getByText('file2.pdf');
+        const button3 = screen.getByText('lname2.fname2.thesis');
         await act(() => {
             userEvent.click(button3);
         });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
-        const button4 = screen.getByText('file1.pdf');
+        const button4 = screen.getByText('lname1.fname1.dissertation');
         await act(() => {
             userEvent.click(button4);
         });
@@ -350,12 +350,12 @@ describe('Inspect', () => {
             userEvent.click(alertButton);
         });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
-        const button3 = screen.getByText('file2.pdf');
+        const button3 = screen.getByText('lname2.fname2.thesis');
         await act(() => {
             userEvent.click(button3);
         });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
-        const button4 = screen.getByText('file1.pdf');
+        const button4 = screen.getByText('lname1.fname1.dissertation');
         await act(() => {
             userEvent.click(button4);
         });
@@ -420,7 +420,7 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(button1);
         });
-        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('lname1.fname1.dissertation')).not.toBeInTheDocument());
         const commentButtons = screen.getAllByTestId('comment-button')
         await act(() => {
             userEvent.click(commentButtons[0]);
@@ -434,7 +434,7 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(button1);
         });
-        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('lname1.fname1.dissertation')).not.toBeInTheDocument());
         const commentButtons = screen.getAllByTestId('comment-button')
         await act(() => {
             userEvent.click(commentButtons[0]);
@@ -453,7 +453,7 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(button1);
         });
-        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('lname1.fname1.dissertation')).not.toBeInTheDocument());
         const commentButtons = screen.getAllByTestId('comment-button')
         await act(() => {
             userEvent.click(commentButtons[0]);
@@ -480,7 +480,7 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(button1);
         });
-        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('lname1.fname1.dissertation')).not.toBeInTheDocument());
         const commentButtons = screen.getAllByTestId('comment-button')
         await act(() => {
             userEvent.click(commentButtons[0]);
@@ -499,12 +499,12 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(alertButton);
         });
-        await waitFor(() =>  expect(screen.getByText('file2.pdf')).toBeInTheDocument());
-        const button3 = screen.getByText('file2.pdf');
+        await waitFor(() =>  expect(screen.getByText('lname2.fname2.thesis')).toBeInTheDocument());
+        const button3 = screen.getByText('lname2.fname2.thesis');
         await act(() => {
             userEvent.click(button3);
         });
-        const button4 = screen.getByText('file1.pdf');
+        const button4 = screen.getByText('lname1.fname1.dissertation');
         await act(() => {
             userEvent.click(button4);
         });
@@ -520,7 +520,7 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(button1);
         });
-        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('lname1.fname1.dissertation')).not.toBeInTheDocument());
         const commentButtons = screen.getAllByTestId('comment-button')
         await act(() => {
             userEvent.click(commentButtons[0]);
@@ -539,8 +539,8 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(alertButton);
         });
-        await waitFor(() =>  expect(screen.getByText('file2.pdf')).toBeInTheDocument());
-        const button3 = screen.getByText('file2.pdf');
+        await waitFor(() =>  expect(screen.getByText('lname2.fname2.thesis')).toBeInTheDocument());
+        const button3 = screen.getByText('lname2.fname2.thesis');
         await act(() => {
             userEvent.click(button3);
         });
@@ -553,7 +553,7 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(button1);
         });
-        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('lname1.fname1.dissertation')).not.toBeInTheDocument());
         const commentButtons = screen.getAllByTestId('comment-button');
         await act(() => {
             userEvent.click(commentButtons[0]);
@@ -572,7 +572,7 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(alertButton);
         });
-        await waitFor(() =>  expect(screen.getByText('file2.pdf')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.getByText('lname2.fname2.thesis')).toBeInTheDocument());
         await act(() => {
             userEvent.click(commentButtons[0]);
         });
@@ -585,7 +585,7 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(button1);
         });
-        await waitFor(() =>  expect(screen.queryByText('file1.pdf')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('lname1.fname1.dissertation')).not.toBeInTheDocument());
         const commentButtons = screen.getAllByTestId('comment-button')
         await act(() => {
             userEvent.click(commentButtons[0]);
@@ -604,7 +604,7 @@ describe('Inspect', () => {
         await act(() => {
             userEvent.click(alertButton);
         });
-        await waitFor(() =>  expect(screen.getByText('file2.pdf')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.getByText('lname2.fname2.thesis')).toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByLabelText('Comment')).toBeInTheDocument());
         await act(() => {
             userEvent.type(commentBox, 'adding new content')
