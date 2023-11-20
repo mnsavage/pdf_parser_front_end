@@ -1,6 +1,5 @@
-const pdfRequirementsMet = {
-    message: 'retrive PDF requirements succesfully',
-    files: [
+const InspectMocks = {
+    requirementsList: [
         {
             name: 'file1.pdf',
             newName: 'lname1.fname1.dissertation',
@@ -26,6 +25,10 @@ const pdfRequirementsMet = {
                         {
                             title: '2 double spaces beneath title',
                             met: true
+                        },
+                        {
+                            title: 'requirement none',
+                            met: null
                         },
                     ],
                 },
@@ -57,6 +60,10 @@ const pdfRequirementsMet = {
                             title: '2 double spaces beneath title',
                             met: true
                         },
+                        {
+                            title: 'requirement none',
+                            met: null
+                        },
                     ],
                 },
             ]
@@ -87,11 +94,16 @@ const pdfRequirementsMet = {
                             title: '2 double spaces beneath title',
                             met: false
                         },
+                        {
+                            title: 'requirement none',
+                            met: null
+                        },
                     ],
                 },
             ]
-        }
+        },
+        null
     ]
 };
 
-export default pdfRequirementsMet;
+export default InspectMocks;

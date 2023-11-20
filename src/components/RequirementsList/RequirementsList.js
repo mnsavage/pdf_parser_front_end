@@ -11,6 +11,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress'
 import PropTypes from 'prop-types';
 import './RequirementsList.css';
 
@@ -50,7 +51,9 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
     var newCond = [];
     for (var key in metConditions) {
       if (key == value) {
-        newCond[key] = {met: !metConditions[value].met, edited: !metConditions[value].edited};
+        newCond[key] = (metConditions[value].automated) ? 
+          {met: !metConditions[value].met, automated: true, edited: !metConditions[value].edited} :
+          {met: !metConditions[value].met, automated: false, edited: false}
       } else {
         newCond[key] = metConditions[key];
       }
@@ -71,6 +74,14 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
     }
     setComments(newComments);
   };
+
+  if (requirementsList === null || metConditions === null || comments === null) {
+    return (
+      <div className='loading-div'>
+        <CircularProgress className='loading-spinner' color='primary' />
+      </div>
+    )
+  }
 
   return (
     <List key='list'>
@@ -114,6 +125,9 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
                     <ListItem
                       key={`ListItemButton-${req.title}`}
                       role={undefined}
+                      
+                      className={`requirement-item-${metConditions[req.title].automated ? 'automated' : 'not-automated'}`}
+                      dense
                     >
                       <List key={`List-${req.title}`} className='sublist'>
                         <ListItem key={`outerListItem-${req.title}`}>
@@ -201,10 +215,10 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
 };
 
 RequirementsList.propTypes = {
-    requirementsList: PropTypes.array.isRequired,
-    metConditions: PropTypes.array.isRequired,
+    requirementsList: PropTypes.array,
+    metConditions: PropTypes.array,
     setMetConditions: PropTypes.func.isRequired,
-    comments: PropTypes.array.isRequired,
+    comments: PropTypes.array,
     setComments: PropTypes.func.isRequired,
     disabled: PropTypes.bool.isRequired,
     showUnmet: PropTypes.bool.isRequired,

@@ -1,5 +1,7 @@
 import React from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItem from '@mui/material/ListItem';
+import Skeleton from '@mui/material/Skeleton';
 import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
 import PropTypes from 'prop-types';
@@ -8,17 +10,26 @@ import './FileList.css';
 const FileList = ({ selectedIndex, names, handleListItemClick }) => {
   return (
     <List dense={false}>
-        {names.map((value, index) => (
+      {names.map((value, index) => (
         <ListItemButton
             className='list-button'
             selected={selectedIndex == index}
             onClick={() => handleListItemClick(index)}
             key={index}
-            disableGutters
         >
+        {
+          (value === null) ? 
+          <>
+            <List dense={true} className='skeleton-list'>
+              <Skeleton className='skeleton' />
+              <Skeleton className='skeleton' />
+            </List>
+            </>
+            :
             <ListItemText primary={value} />
+        }
         </ListItemButton>
-        ))}
+      ))}
     </List>
   );
   };

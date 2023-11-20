@@ -43,7 +43,7 @@ const App = () => {
   const determinePage = () => {
     return page == pageOption.Upload ? <Upload setPage={update} uploadedFiles={uploadedFiles} setUploadedFiles={setUploadedFiles} />
     : page == pageOption.Confirm ? <Confirm setPage={update} uploadedFiles={uploadedFiles} />
-    : <Inspect setPage={update} uploadedFiles={uploadedFiles} setUploadedFiles={setUploadedFiles} requirementsList={requirementsList} />
+    : <Inspect setPage={update} uploadedFiles={uploadedFiles} setUploadedFiles={setUploadedFiles} />
   };
 
   return (

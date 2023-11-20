@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import Typography from '@mui/material/Typography';
 import pageOption from '../../utils/pageOption';
 import UnderlineHeader from '../../components/UnderlineHeader/UnderlineHeader';
 import FileList from '../../components/FileList/FileList';
@@ -11,15 +12,22 @@ import Alert from '../../components/Alert/Alert';
 import CreateSummary from './CreateSummary/CreateSummary';
 import PropTypes from 'prop-types';
 import RequirementsList from '../../components/RequirementsList/RequirementsList';
+import UseRequirementData from '../../hooks/UseRequirementData/UseRequirementData'
 import './Inspect.css';
 
-const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList }) => {
+const Inspect = ({ setPage, uploadedFiles, setUploadedFiles }) => {
+  const requirementsList = UseRequirementData(uploadedFiles)
   const [metConditions, setMetConditions] = useState(
     requirementsList.map((file) => {
+      if (file === null) {
+        return null;
+      }
       var metArray = [];
       file.header.map((header) => {
         header.requirements.map((req) => {
-          metArray[req.title] = {met: req.met, edited: false};
+          metArray[req.title] = (req.met === null) ?
+            {met: false, automated: false, edited: false} :
+            {met: req.met, automated: true, edited: false}
         })
       })
       return metArray;
@@ -27,6 +35,9 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
   );
   const [comments, setComments] = useState(
     requirementsList.map((file) => {
+      if (file === null) {
+        return null;
+      }
       var commentsArray = [];
       file.header.map((header) => {
         header.requirements.map((req) => {
@@ -44,6 +55,42 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
   const [url, setUrl] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
   const [editAlertOpen, setEditAlertOpen] = useState(false);
+
+  useEffect(() => {
+    // update met conditions
+    const newConditions = metConditions.map((conditon, index) => {
+      if (conditon === null && requirementsList[index] !== null) {
+        var metArray = [];
+        requirementsList[index].header.map((header) => {
+          header.requirements.map((req) => {
+            metArray[req.title] = (req === null) ?
+            {met: false, automated: false, edited: false} :
+            {met: req.met, automated: true, edited: false}
+          })
+        })
+        return metArray;
+      } else {
+        return conditon;
+      }
+    })
+    setMetConditions(newConditions);
+
+    // update met comments
+    const newComments = comments.map((comment, index) => {
+      if (index == selectedIndex) {
+        var commentsArray = [];
+        requirementsList[index].header.map((header) => {
+          header.requirements.map((req) => {
+            commentsArray[req.title] = '';
+          })
+        })
+        return commentsArray;
+      } else {
+        return comment;
+      }
+    })
+    setComments(newComments);
+  }, [requirementsList]);
 
   useEffect(() => {
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
@@ -96,7 +143,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
     var newCond = [];
     for (var key in selectedMetConditions) {
       if (selectedMetConditions[key].edited) {
-        newCond[key] = {met: !selectedMetConditions[key].met, edited: false};
+        newCond[key] = {met: !selectedMetConditions[key].met, automated: true, edited: false};
       } else {
         newCond[key] = selectedMetConditions[key];
       }
@@ -149,16 +196,17 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
           <div className='left-container'>
             <UnderlineHeader title='Uploaded Files' />
             <div className='confirm-list-container'>
-              <FileList selectedIndex={selectedIndex} names={requirementsList.map((resoponse) => resoponse.newName)} handleListItemClick={handleListItemClick} />
+              <FileList selectedIndex={selectedIndex} names={requirementsList.map((element) => (element === null) ? null : element.newName)} handleListItemClick={handleListItemClick} />
             </div>
           </div>
         )}
         <div className='vl'></div>
         <div className='right-list-container'>
+          <Typography variant='body3' className='automated-label'>* Automated requirements are outlined</Typography>
           <FormControlLabel control={<Switch onChange={handleUnmetSwitch} />} label='Show only unmet conditons' className='switch' />
           <div className='requirements-list-container'>
             <RequirementsList 
-              requirementsList={requirementsList[selectedIndex].header} 
+              requirementsList={(requirementsList[selectedIndex] === null) ? null : requirementsList[selectedIndex].header} 
               metConditions={selectedMetConditions} 
               setMetConditions={setSelectedMetConditions}
               comments={selectedComments} 
@@ -228,7 +276,6 @@ Inspect.propTypes = {
   setPage: PropTypes.func.isRequired,
   uploadedFiles: PropTypes.array.isRequired,
   setUploadedFiles: PropTypes.func.isRequired,
-  requirementsList: PropTypes.array.isRequired
 };
 
 export default Inspect;
