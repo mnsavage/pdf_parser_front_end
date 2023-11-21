@@ -16,7 +16,7 @@ import UseRequirementData from '../../hooks/UseRequirementData/UseRequirementDat
 import './Inspect.css';
 
 const Inspect = ({ setPage, uploadedFiles, setUploadedFiles }) => {
-  const requirementsList = UseRequirementData(uploadedFiles)
+  const {requirementsList} = UseRequirementData(uploadedFiles)
   const [metConditions, setMetConditions] = useState(
     requirementsList.map((file) => {
       if (file === null) {

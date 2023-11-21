@@ -78,7 +78,11 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
   if (requirementsList === null || metConditions === null || comments === null) {
     return (
       <div className='loading-div'>
-        <CircularProgress className='loading-spinner' color='primary' />
+        <CircularProgress 
+          className='loading-spinner' 
+          color='primary'
+          data-testid = 'loading-spinner'
+        />
       </div>
     )
   }

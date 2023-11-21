@@ -20,7 +20,11 @@ const FileList = ({ selectedIndex, names, handleListItemClick }) => {
         {
           (value === null) ? 
           <>
-            <List dense={true} className='skeleton-list'>
+            <List
+              className='skeleton-list'
+              data-testid='skeleton-list'
+              dense
+            >
               <Skeleton className='skeleton' />
               <Skeleton className='skeleton' />
             </List>

@@ -475,5 +475,21 @@ describe('RequirementsList', () => {
         expect(element.length).toBe(2);
     });
 
+    test('Should show loading symbol when supplied null', () => {
+        render(
+            <RequirementsList 
+                requirementsList={null} 
+                metConditions={null}
+                setMetConditions={jest.fn()}
+                comments={null}
+                setComments={jest.fn()}
+                disabled={false} 
+                showUnmet={false} 
+            />
+        );
+        const element = screen.queryByTestId('loading-spinner');
+        expect(element).toBeInTheDocument();
+    });
+
 
 })
