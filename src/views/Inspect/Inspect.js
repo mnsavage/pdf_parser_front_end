@@ -15,8 +15,8 @@ import RequirementsList from '../../components/RequirementsList/RequirementsList
 import UseRequirementData from '../../hooks/UseRequirementData/UseRequirementData'
 import './Inspect.css';
 
-const Inspect = ({ setPage, uploadedFiles, setUploadedFiles }) => {
-  const {requirementsList} = UseRequirementData(uploadedFiles)
+const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirementsList }) => {
+  const requirementsList = (testingRequirementsList == null)? UseRequirementData(uploadedFiles) : testingRequirementsList;
   const [metConditions, setMetConditions] = useState(
     requirementsList.map((file) => {
       if (file === null) {
@@ -276,6 +276,7 @@ Inspect.propTypes = {
   setPage: PropTypes.func.isRequired,
   uploadedFiles: PropTypes.array.isRequired,
   setUploadedFiles: PropTypes.func.isRequired,
+  testingRequirementsList: PropTypes.array
 };
 
 export default Inspect;

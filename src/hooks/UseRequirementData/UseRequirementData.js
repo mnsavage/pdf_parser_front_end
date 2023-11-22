@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import InspectMocks from '../../views/Inspect/_test_/mocks'
+// import InspectMocks from '../../views/Inspect/_test_/mocks';
 import axios from 'axios';
 import jsonData from '../../config.json';
 import PropTypes from 'prop-types';
 
 const UseRequirementData = (files) => {
     // const [requirementsList, setrequirementsList] = useState(InspectMocks.requirementsList);
-    const [requirementsList, setrequirementsList] = useState(uploadedFiles.map(() => null));
+    const [requirementsList, setrequirementsList] = useState(files.map(() => null));
     const apiDomain = jsonData.apiURL
-    var requestArray = uploadedFiles.map(() => {return {state: 'not started'}});
+    var requestArray = files.map(() => {return {state: 'not started'}});
 
     // create the URL for the request
     const createURL = (uuid=null) => {
@@ -96,16 +96,15 @@ const UseRequirementData = (files) => {
     }
 
     useEffect(() => {
-        console.log('this is run')
-
         for (const index in files) {
             postFile(files[index], index)
         }
 
-        notcompleted = true
+        var notcompleted = true
         var count = 0
         while (count < 20 && notcompleted) { // wait up to 20 min
             notcompleted = checkFileRequests()
+            count += 1;
         }
         // update to show time out error if needed
     }, [])

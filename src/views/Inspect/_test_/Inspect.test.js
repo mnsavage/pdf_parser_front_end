@@ -2,44 +2,44 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils';
-import pdfRequirementsMet from './mocks';
+import InspectMocks from './mocks';
 import Inspect from '../Inspect';
 
 describe('Inspect', () => {
     global.URL.createObjectURL = jest.fn();
     
     test('Renders Uploaded files title', () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const element = screen.getByText('Uploaded Files');
         expect(element).toBeInTheDocument();
     });
 
     test('Contains the continue button', () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button = screen.getByText('Continue');
         expect(button).toBeInTheDocument();
     });
 
     test('Contains the Download Summaries button', () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button = screen.getByText('Download Summaries');
         expect(button).toBeInTheDocument();
     });
 
     test('Contains the Edit/ View Selected File button', () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button = screen.getByText('Edit/ View Selected File');
         expect(button).toBeInTheDocument();
     });
 
     test('Renders the automated requirements key label', () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const element = screen.getByText('* Automated requirements are outlined');
         expect(element).toBeInTheDocument();
     });
 
     test('Renders alert when continue is pressed', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button = screen.getByText('Continue');
         await act(() => {
             userEvent.click(button);
@@ -49,7 +49,7 @@ describe('Inspect', () => {
 
     test('Sets uploaded files to null when continue on the alert is pressed', async () => {
         const setUploadedFiles = jest.fn();
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={setUploadedFiles} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={setUploadedFiles} testingRequirementsList={InspectMocks.requirementsList} />);
         const button = screen.getByText('Continue');
         await act(() => {
             userEvent.click(button)
@@ -63,7 +63,7 @@ describe('Inspect', () => {
     });
 
     test('Stays on the same page when back on the alert is pressed', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button = screen.getByText('Continue');
         await act(() => {
             userEvent.click(button)
@@ -79,7 +79,7 @@ describe('Inspect', () => {
     });
 
     test('Displays the list of uploaded files', () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const element1 = screen.getByText('lname1.fname1.dissertation');
         expect(element1).toBeInTheDocument();
         const element2 = screen.getByText('lname2.fname2.thesis');
@@ -89,7 +89,7 @@ describe('Inspect', () => {
     });
 
     test('Should render requirements list component', () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const element1 = screen.getByText('Page Formatting & Font');
         expect(element1).toBeInTheDocument();
         const element2 = screen.getByText('Page Order & Section Formatting');
@@ -97,13 +97,13 @@ describe('Inspect', () => {
     });
 
     test('Should render show unmet conditions toggle', () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const element1 = screen.getByText('Show only unmet conditons');
         expect(element1).toBeInTheDocument();
     });
 
     test('Selecting a file displays corresponding information in the requirements list', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()}  requirementsList={pdfRequirementsMet.files}/>);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()}  testingRequirementsList={InspectMocks.requirementsList}/>);
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
         const button1 = screen.getByText('lname2.fname2.thesis');
         await act(() => {
@@ -118,7 +118,7 @@ describe('Inspect', () => {
     });
 
     test('Selecting the show unmet conditions toggle only shows unmet conditions', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Show only unmet conditons');
         await act(() => {
             userEvent.click(button1);
@@ -129,7 +129,7 @@ describe('Inspect', () => {
     });
 
     test('Should not show file list when editing a file', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -138,7 +138,7 @@ describe('Inspect', () => {
     });
 
     test('Should show correct buttons when editing a file', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -150,7 +150,7 @@ describe('Inspect', () => {
     });
 
     test('Does not render alert when continue is pressed when editing a file if no edits are made', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -165,7 +165,7 @@ describe('Inspect', () => {
     });
 
     test('Should render alert when continue is pressed when editing a file if edits are made', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -183,7 +183,7 @@ describe('Inspect', () => {
     });
 
     test('Should not render alert when continue is pressed when editing a file if edits are made but then reversed', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -207,7 +207,7 @@ describe('Inspect', () => {
     });
 
     test('Should render the file list and correct buttons when continue on the alert is pressed when editing a file', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -223,7 +223,7 @@ describe('Inspect', () => {
     });
 
     test('Stays on the same page when back on the alert is pressed when editing a file', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -248,7 +248,7 @@ describe('Inspect', () => {
     });
 
     test('Checkboxes can be changed when editing', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -262,7 +262,7 @@ describe('Inspect', () => {
     });
 
     test('Checkboxes can not be changed when not editing', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const buttons = screen.getAllByTestId('checkbox');
         await act(() => {
             userEvent.click(buttons[0]);
@@ -271,7 +271,7 @@ describe('Inspect', () => {
     });
 
     test('Show edited when a requirement is edited', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -285,7 +285,7 @@ describe('Inspect', () => {
     });
 
     test('Remove edited when a requirement is edited twice', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -303,7 +303,7 @@ describe('Inspect', () => {
     });
 
     test('Should show edited when a condition is edited, even after the file has been switched', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -336,7 +336,7 @@ describe('Inspect', () => {
     });
 
     test('Should save changes when a condition is edited, even after the file has been switched', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -369,7 +369,7 @@ describe('Inspect', () => {
     });
 
     test('Should remove edited when reset to original button is pressed', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -388,7 +388,7 @@ describe('Inspect', () => {
     });
 
     test('Should reset conditions when reset to original button is pressed', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -407,12 +407,12 @@ describe('Inspect', () => {
     });
 
     test('Should not open comment box on initial render', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
     });
 
     test('Should not open comment box on initial render when the comment button is pressed', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const commentButtons = screen.getAllByTestId('comment-button')
         await act(() => {
             userEvent.click(commentButtons[0]);
@@ -421,7 +421,7 @@ describe('Inspect', () => {
     });
 
     test('Should open comment box when editing', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -435,7 +435,7 @@ describe('Inspect', () => {
     });
 
     test('Should change comment in comment box when editing', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -454,7 +454,7 @@ describe('Inspect', () => {
     });
 
     test('Should save comment after clicking another comment', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -481,7 +481,7 @@ describe('Inspect', () => {
     });
 
     test('Should save comment after another file is switched to', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -521,7 +521,7 @@ describe('Inspect', () => {
     });
 
     test('Should not have comment boxes open when a file is switched', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -554,7 +554,7 @@ describe('Inspect', () => {
     });
 
     test('Should be able to view comment box that has a comment after editing', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -586,7 +586,7 @@ describe('Inspect', () => {
     });
 
     test('Should not be able to edit comment box that has a comment after editing', async () => {
-        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} />);
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
         const button1 = screen.getByText('Edit/ View Selected File');
         await act(() => {
             userEvent.click(button1);
@@ -616,6 +616,45 @@ describe('Inspect', () => {
             userEvent.type(commentBox, 'adding new content')
         });
         await waitFor(() =>  expect(screen.queryByText('adding new content')).not.toBeInTheDocument());
+    });
+
+    test('Should not show a requirement was edited if it is not automated', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[3]);
+        });
+        await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
+    });
+
+    test('Should not reset condition when reset condition button is pressed if the condition is automated', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
+        const buttons = screen.getAllByTestId('checkbox');
+        await act(() => {
+            userEvent.click(buttons[3]);
+        });
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(3));
+        const button3 = screen.getByText('Reset All Conditions');
+        await act(() => {
+            userEvent.click(button3);
+        });
+        await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(3));
+    });
+
+    test('Should render loading skeleton when a null name is in list', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
+        const loadingCell = screen.queryByTestId('skeleton-list');
+        expect(loadingCell).toBeInTheDocument();
     });
 
 })

@@ -31,8 +31,7 @@ describe('FileList', () => {
     });
 
     test('Should render loading skeleton when a null name is in list', async () => {
-        const handleListItemClick = jest.fn();
-        render(<FileList selectedIndex={0} names={['file1.pdf', 'file2.pdf', null]} handleListItemClick={handleListItemClick}/>);
+        render(<FileList selectedIndex={0} names={['file1.pdf', 'file2.pdf', null]} handleListItemClick={jest.fn()}/>);
         const loadingCell = screen.queryByTestId('skeleton-list');
         expect(loadingCell).toBeInTheDocument();
     });

@@ -48,5 +48,10 @@
     "eslint": "^8.50.0",
     "eslint-plugin-react": "^7.33.2",
     "react-router-dom": "^6.16.0"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    }
   }
 }
