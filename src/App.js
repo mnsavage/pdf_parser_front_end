@@ -15,8 +15,6 @@ const App = () => {
   const [page, setPage] = useState(pageOption.Upload);
   const [uploadedFiles, setUploadedFiles] = useState(null);
   const [data, setData] = useState(null);
-  // being mocked rn, but this should send a post and retrieve if the requirements are met data for each PDF
-  const [requirementsList, setRequirementsList] = useState(pdfRequirementsMet.files);
   // fetch get data from upload API
   const apiDomain = jsonData.apiURL
   console.log(`API domain: ${apiDomain}`);
