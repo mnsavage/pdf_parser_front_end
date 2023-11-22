@@ -1,46 +1,54 @@
-import React, { render } from '@testing-library/react';
-import { fetchUploadGetData } from '../api';
-import { act } from 'react-dom/test-utils';
-import PropTypes from 'prop-types';
+import React from '@testing-library/react';
+import { enableFetchMocks } from 'jest-fetch-mock';
+import { uploadPDF, getPDF } from '../api';
 
-// mocking fetch
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ data: 'some data' }),
-  })
-);
+enableFetchMocks();
 
-// Mock component to use our hook
-function MockComponent(props) {
-  fetchUploadGetData(props.url);
-  return null; // Render nothing
-}
+beforeEach(() => {
+  fetch.resetMocks();
+});
 
-MockComponent.propTypes = {
-  url: PropTypes.string.isRequired
-};
+global.fetch = require('jest-fetch-mock');
 
-export default MockComponent;
+test('successful upload returns uuid', () => {
+  const mockUUID = '12345';
+  fetch.mockResponseOnce(JSON.stringify({ uuid: mockUUID }), { status: 200 });
 
-describe('fetchUploadGetData hook', () => {
-  it('fetches data on mount', async () => {
-    const mockURL = 'http://test-url.com/';
+  return uploadPDF('https://example.com/' , 'file_name.pdf','pdf-data' )
+      .then(uuid => {
+          expect(uuid).toBe(mockUUID);
+      });
+});
 
-    // Reset fetch mock and setup the desired mock behavior
-    fetch.mockClear();
-    fetch.mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ data: 'some data' }),
-      })
+test('unsuccessful upload throws an error', async () => {
+  fetch.mockResponseOnce(null, { status: 500 });
+
+  await expect(uploadPDF('https://example.com/', 'pdf-data'))
+    .rejects.toThrow('bad status code');
+});
+
+test('successful response returns json', () => {
+  const mockResponse = { body: 'pdf-data' };
+  fetch.mockResponseOnce(JSON.stringify(mockResponse), { status: 200 });
+
+  return getPDF('https://example.com/', 'uuid').then(response => {
+      expect(response).toEqual(mockResponse);
+  });
+});
+
+test('retries on 202 response', async () => {
+    fetch.mockResponses(
+        [null, { status: 202 }],
+        [JSON.stringify({ data: 'pdf-data' }), { status: 200 }]
     );
 
-    await act(async () => {
-      render(<MockComponent url={mockURL} />);
-    });
+    const response = await getPDF('https://example.com/', 'uuid', 10);
+    expect(response).toEqual({ data: 'pdf-data' }); // Make sure to compare with the object, not a JSON string
+});
 
-    expect(fetch).toHaveBeenCalledWith(`${mockURL}upload`);
-  });
+test('throws error on non-200/202 response', () => {
+  fetch.mockResponseOnce(null, { status: 500 });
+
+  expect(getPDF('https://example.com/', 'uuid')).rejects.toThrow('HTTP error! Status: 500');
 });
 
