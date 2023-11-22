@@ -15,7 +15,7 @@ describe('UseRequirementData', () => {
     expect(requirementsList[2]).toBe(null);
   });
 
-  test('Should initially return a null array with the number of elements', async () => {
+  test('Should return file information', async () => {
     const { result } = renderHook(() => UseRequirementData([new File(['file1'], 'file1.pdf'), new File(['file2'], 'file2.pdf'), new File(['file3'], 'file3.pdf')]));
     const { requirementsList } = result.current;
     axios.post.mockResolvedValueOnce({status: 200, data: {uuid: '1234'}});
