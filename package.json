@@ -47,6 +47,7 @@
   "devDependencies": {
     "eslint": "^8.50.0",
     "eslint-plugin-react": "^7.33.2",
+    "jest-fetch-mock": "^3.0.3",
     "react-router-dom": "^6.16.0"
   },
   "jest": {
