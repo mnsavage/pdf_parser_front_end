@@ -8,31 +8,11 @@ import Inspect from './views/Inspect/Inspect';
 import theme from './utils/theme';
 import pageOption from './utils/pageOption';
 import pdfRequirementsMet from './views/Inspect/_test_/mocks';
-import { fetchUploadGetData } from './services/api'
-import jsonData from './config.json';
 
 const App = () => {
   const [page, setPage] = useState(pageOption.Upload);
   const [uploadedFiles, setUploadedFiles] = useState(null);
   const [data, setData] = useState(null);
-  // fetch get data from upload API
-  const apiDomain = jsonData.apiURL
-  console.log(`API domain: ${apiDomain}`);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await fetchUploadGetData(apiDomain);
-        setData(result);
-        console.log(`fetched data: ${JSON.stringify(result, null, 4)}`);
-      } catch (error) {
-        // Handle the error appropriately, maybe set some error state to show an error message to the user
-        console.log(`Error calling fetchUploadGetData function: ${error}`);
-      }
-    };
-
-    fetchData();
-  }, [apiDomain]);
 
   const update = (next) => {
     setPage(next);
