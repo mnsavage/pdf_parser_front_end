@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-export const uploadPDF = (url, file_name, encodedPDF) =>
+export const postPDF = (url, file_name, encodedPDF) =>
 {
     const API_URL = `${url}upload`;
     return fetch(API_URL, 

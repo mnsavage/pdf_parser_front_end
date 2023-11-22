@@ -1,6 +1,6 @@
 import React from '@testing-library/react';
 import { enableFetchMocks } from 'jest-fetch-mock';
-import { uploadPDF, getPDF } from '../api';
+import { postPDF, getPDF } from '../api';
 
 enableFetchMocks();
 
@@ -14,7 +14,7 @@ test('successful upload returns uuid', () => {
   const mockUUID = '12345';
   fetch.mockResponseOnce(JSON.stringify({ uuid: mockUUID }), { status: 200 });
 
-  return uploadPDF('https://example.com/' , 'file_name.pdf','pdf-data' )
+  return postPDF('https://example.com/' , 'file_name.pdf','pdf-data' )
       .then(uuid => {
           expect(uuid).toBe(mockUUID);
       });
@@ -23,7 +23,7 @@ test('successful upload returns uuid', () => {
 test('unsuccessful upload throws an error', async () => {
   fetch.mockResponseOnce(null, { status: 500 });
 
-  await expect(uploadPDF('https://example.com/', 'pdf-data'))
+  await expect(postPDF('https://example.com/', 'pdf-data'))
     .rejects.toThrow('bad status code');
 });
 
