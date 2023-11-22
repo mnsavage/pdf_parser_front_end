@@ -121,7 +121,7 @@ const UseRequirementData = (files) => {
                 }
                 else if(response.status === 202){
                     return new Promise(resolve =>
-                        setTimeout(()=> resolve(getPDF(url, uuid, retryDelay)), retryDelay)
+                        setTimeout(()=> resolve(getPDF(uuid, index, retryDelay)), retryDelay)
                     );
                 }
                 else{
