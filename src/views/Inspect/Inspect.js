@@ -59,7 +59,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
   useEffect(() => {
     // update met conditions
     const newConditions = metConditions.map((conditon, index) => {
-      if (conditon === null && requirementsList[index] !== null) {
+      if (conditon !== null && requirementsList[index] !== null && index == selectedIndex) {
         var metArray = [];
         requirementsList[index].header.map((header) => {
           header.requirements.map((req) => {
@@ -77,7 +77,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
 
     // update met comments
     const newComments = comments.map((comment, index) => {
-      if (index == selectedIndex) {
+      if (comment !== null && requirementsList[index] !== null && index == selectedIndex) {
         var commentsArray = [];
         requirementsList[index].header.map((header) => {
           header.requirements.map((req) => {
@@ -95,7 +95,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
   useEffect(() => {
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
     setSelectedMetConditions(metConditions[selectedIndex]);
-    setSelectedComments(comments[selectedIndex])
+    setSelectedComments(comments[selectedIndex]);
   }, [selectedIndex]);
 
   // Check if any edits were made

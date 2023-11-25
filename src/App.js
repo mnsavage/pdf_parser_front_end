@@ -19,20 +19,20 @@ const App = () => {
   const apiDomain = jsonData.apiURL
   console.log(`API domain: ${apiDomain}`);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await fetchUploadGetData(apiDomain);
-        setData(result);
-        console.log(`fetched data: ${JSON.stringify(result, null, 4)}`);
-      } catch (error) {
-        // Handle the error appropriately, maybe set some error state to show an error message to the user
-        console.log(`Error calling fetchUploadGetData function: ${error}`);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const result = await fetchUploadGetData(apiDomain);
+  //       setData(result);
+  //       console.log(`fetched data: ${JSON.stringify(result, null, 4)}`);
+  //     } catch (error) {
+  //       // Handle the error appropriately, maybe set some error state to show an error message to the user
+  //       console.log(`Error calling fetchUploadGetData function: ${error}`);
+  //     }
+  //   };
 
-    fetchData();
-  }, [apiDomain]);
+  //   fetchData();
+  // }, [apiDomain]);
 
   const update = (next) => {
     setPage(next);
