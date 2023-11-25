@@ -23,7 +23,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
   }, [requirementsList])
   const [metConditions, setMetConditions] = useState(
     (testingRequirementsList == null)? (
-      uploadedFiles.map((file) => null)
+      uploadedFiles.map(() => null)
     ) : (
       requirementsList.map((file) => {
         if (file === null) {
@@ -43,7 +43,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
   );
   const [comments, setComments] = useState(
     (testingRequirementsList == null)? (
-      uploadedFiles.map((file) => null)
+      uploadedFiles.map(() => null)
     ) : (
       requirementsList.map((file) => {
         if (file === null) {
