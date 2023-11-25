@@ -8,13 +8,12 @@ import Inspect from './views/Inspect/Inspect';
 import theme from './utils/theme';
 import pageOption from './utils/pageOption';
 import pdfRequirementsMet from './views/Inspect/_test_/mocks';
-import { fetchUploadGetData } from './services/api'
-import jsonData from './config.json';
-
+// this is comment
 const App = () => {
   const [page, setPage] = useState(pageOption.Upload);
   const [uploadedFiles, setUploadedFiles] = useState(null);
   const [data, setData] = useState(null);
+
   // fetch get data from upload API
   const apiDomain = jsonData.apiURL
   console.log(`API domain: ${apiDomain}`);
