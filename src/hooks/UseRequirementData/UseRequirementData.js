@@ -50,7 +50,6 @@ const UseRequirementData = (files) => {
         try {
             const base64Content = await fileToBase64(file);
             const response = await axios.post(createURL(), {
-                mode: 'no-cors',
                 method: 'post',
                 headers: {
                     Accept: 'application/json'
@@ -58,7 +57,7 @@ const UseRequirementData = (files) => {
                 body: base64Content
             })
             if (response.status == 200) {
-                console.log('compleated');
+                console.log('completed');
                 console.log(`uuid: ${response.data.uuid}`);
                 requestArray[index] = {uuid: response.data.uuid, state: 'in progress'};
             }
@@ -104,7 +103,7 @@ const UseRequirementData = (files) => {
         try {
             const response = await axios.get(createURL(uuid))
             if (response.status == 200) { // completed
-                console.log('compleated')
+                console.log('completed')
                 console.log(`output: ${response.data.job_output}`);
                 requestArray[index] = {state: 'completed'};
                 updateRequirementList(response.data.job_output, index);
@@ -146,20 +145,20 @@ const UseRequirementData = (files) => {
     // };
 
     const checkFileRequests = async () => {
-        var notCompleted = false;
-        await new Promise(r => setTimeout(r, 30000)); // wait 30 sec
+        var completed = true;
+        // await new Promise(r => setTimeout(r, 30000)); // wait 30 sec
         requestArray.map((request, index) => {
             if (request.state == 'in progress') {
                 console.log(`checking request of ${request}`)
                 if (getFileInformation(request.uuid, index)) {
-                    notCompleted = true;
-                    console.log(`not compleated`);
+                    completed = false;
+                    console.log(`not completed`);
                 }
                 console.log(`done checking request of ${request}`)
             }
 
         })
-        return notCompleted
+        return completed
     }
 
     useEffect(() => {
@@ -214,9 +213,15 @@ const UseRequirementData = (files) => {
 
         const MINUTE_MS = 30000;
 
+        var timesRun = 0
         const interval = setInterval(() => {
             console.log(`checking iteration`)
-            checkFileRequests();
+            const completed = checkFileRequests();
+            console.log(completed)
+            timesRun += 1;
+            if (timesRun > 20 || completed) {
+                clearInterval(interval);
+            }
         }, MINUTE_MS);
     }, [])
 
