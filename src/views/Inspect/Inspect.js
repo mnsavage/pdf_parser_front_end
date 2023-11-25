@@ -17,6 +17,10 @@ import './Inspect.css';
 
 const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirementsList }) => {
   const requirementsList = (testingRequirementsList == null)? UseRequirementData(uploadedFiles) : testingRequirementsList;
+  console.log(`requirementsList outside useeffect: ${requirementsList}`);
+  useEffect(() => {
+    console.log(`requirementsList in useeffect: ${requirementsList}`);
+  }, [requirementsList])
   const [metConditions, setMetConditions] = useState(
     requirementsList.map((file) => {
       if (file === null) {
