@@ -22,34 +22,42 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     console.log(`requirementsList in useeffect: ${requirementsList}`);
   }, [requirementsList])
   const [metConditions, setMetConditions] = useState(
-    requirementsList.map((file) => {
-      if (file === null) {
-        return null;
-      }
-      var metArray = [];
-      file.header.map((header) => {
-        header.requirements.map((req) => {
-          metArray[req.title] = (req.met === null) ?
-            {met: false, automated: false, edited: false} :
-            {met: req.met, automated: true, edited: false}
+    (testingRequirementsList == null)? (
+      uploadedFiles.map((file) => null)
+    ) : (
+      requirementsList.map((file) => {
+        if (file === null) {
+          return null;
+        }
+        var metArray = [];
+        file.header.map((header) => {
+          header.requirements.map((req) => {
+            metArray[req.title] = (req.met === null) ?
+              {met: false, automated: false, edited: false} :
+              {met: req.met, automated: true, edited: false}
+          })
         })
+        return metArray;
       })
-      return metArray;
-    })
+    )
   );
   const [comments, setComments] = useState(
-    requirementsList.map((file) => {
-      if (file === null) {
-        return null;
-      }
-      var commentsArray = [];
-      file.header.map((header) => {
-        header.requirements.map((req) => {
-          commentsArray[req.title] = '';
+    (testingRequirementsList == null)? (
+      uploadedFiles.map((file) => null)
+    ) : (
+      requirementsList.map((file) => {
+        if (file === null) {
+          return null;
+        }
+        var commentsArray = [];
+        file.header.map((header) => {
+          header.requirements.map((req) => {
+            commentsArray[req.title] = '';
+          })
         })
+        return commentsArray;
       })
-      return commentsArray;
-    })
+    )
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedMetConditions, setSelectedMetConditions] = useState(metConditions[selectedIndex]);
