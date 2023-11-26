@@ -51,7 +51,10 @@ const UseRequirementData = (files) => {
                 headers: {
                     Accept: 'application/json'
                 },
-                body: base64Content
+                body: JSON.stringify({
+                    'encoded_pdf': base64Content,
+                    'file_name': file.name
+                }) 
             })
             if (response.status == 200) {
                 console.log('completed');
