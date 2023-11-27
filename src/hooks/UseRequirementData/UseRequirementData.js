@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 const UseRequirementData = (files) => {
     const [requirementsList, setrequirementsList] = useState(files.map(() => null));
     const apiDomain = jsonData.apiURL
-    var requestArray = files.map(() => {return {state: 'not started'}});
+    const [requestArray, setRequestArray] = useState(files.map(() => {return {state: 'not started'}}));
 
     // create the URL for the request
     const createURL = (uuid=null) => {
@@ -22,7 +22,18 @@ const UseRequirementData = (files) => {
             }
         })
         setrequirementsList(newRequirementList);
-    }
+    };
+
+    const updateRequestArray = (newRequest, updateIndex) => {
+        const newRequestArray = requestArray.map((request, index) => {
+            if (index == updateIndex) {
+                return newRequest;
+            } else {
+                return request;
+            }
+        })
+        setRequestArray(newRequestArray);
+    };
 
     // convert file to a base 64 encoded string
     const fileToBase64 = async (file) => {
@@ -44,6 +55,7 @@ const UseRequirementData = (files) => {
     
     // post given file
     const postFile = async (file, index) => {
+        console.log(requestArray);
         try {
             const base64Content = await fileToBase64(file);
             const response = await axios.post(createURL(), {
@@ -59,10 +71,10 @@ const UseRequirementData = (files) => {
             if (response.status == 200) {
                 console.log('completed');
                 console.log(`uuid: ${response.data.uuid}`);
-                requestArray[index] = {uuid: response.data.uuid, state: 'in progress'};
+                updateRequestArray({uuid: response.data.uuid, state: 'in progress'}, index);
             }
         } catch (error) {
-            requestArray[index] = {state: 'error'};
+            updateRequestArray({state: 'error'}, index);
             console.error('Error posting file data from API:', error.response);
         }
     };
@@ -74,7 +86,7 @@ const UseRequirementData = (files) => {
             if (response.status == 200) { // completed
                 console.log('completed')
                 console.log(`output: ${response.data.job_output}`);
-                requestArray[index] = {state: 'completed'};
+                updateRequestArray({state: 'completed'}, index);
                 updateRequirementList(response.data.job_output, index);
             }
             else if (response.status == 202) { // in progress
@@ -82,7 +94,7 @@ const UseRequirementData = (files) => {
                 return true;
             }
         } catch (error) {
-            requestArray[index] = {state: 'error'};
+            updateRequestArray({state: 'error'}, index);
             console.error('Error getting file data from API:', error.response);
         }
         return false
