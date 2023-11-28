@@ -76,6 +76,10 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
       console.log(conditon['header'])
       console.log(typeof conditon['header'])
       if (requirementsList[index] !== null && conditon === null) {
+        console.log(conditon)
+        console.log(typeof conditon)
+        console.log(conditon['header'])
+        console.log(typeof conditon['header'])
         var metArray = [];
         requirementsList[index]['header'].map((header) => {
           header['requirements'].map((req) => {
