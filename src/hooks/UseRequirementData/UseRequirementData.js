@@ -55,6 +55,7 @@ const UseRequirementData = (files) => {
     
     // post given file
     const postFile = async (file, index) => {
+        console.log('requestArray:');
         console.log(requestArray);
         try {
             const base64Content = await fileToBase64(file);
@@ -106,7 +107,8 @@ const UseRequirementData = (files) => {
 
     const checkFileRequests = async () => {
         var completed = true;
-        console.log(`requestArray: ${requestArray}`);
+        console.log('requestArray:');
+        console.log(requestArray);
         requestArray.map((request, index) => {
             if (request.state == 'in progress') {
                 console.log(`checking request of ${request}`)
@@ -132,13 +134,15 @@ const UseRequirementData = (files) => {
 
         const MINUTE_MS = 30000;
 
-        console.log(`requestArray: ${requestArray}`);
+        console.log('requestArray:');
+        console.log(requestArray);
 
         var timesRun = 0
         const interval = setInterval(() => {
-            console.log(`checking iteration`)
+            console.log(`checking iteration ${timesRun}`);
             const completed = checkFileRequests();
-            console.log(`completed: ${completed}`);
+            console.log('completed:');
+            console.log(completed);
             timesRun += 1;
             if (timesRun > 20 || completed) {
                 clearInterval(interval);
