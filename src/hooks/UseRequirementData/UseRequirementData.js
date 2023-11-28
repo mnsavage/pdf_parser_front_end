@@ -98,7 +98,6 @@ const UseRequirementData = (files) => {
 
     // get information from posted files, returns if another call needs to be made
     const getFileInformation = async (uuid, index) => {
-        var completed = true;
         console.log(`getting info for file with uuid: ${uuid}`);
         try {
             const response = await axios.get(createURL(uuid));
@@ -112,14 +111,14 @@ const UseRequirementData = (files) => {
             else if (response.status == 202) { // in progress
                 console.log(`uuid ${uuid} in progress`);
                 console.log('getFileInformation return false');
-                completed = false;
+                return false;
             }
         } catch (error) {
             // await updateRequestArray({state: 'error'}, index);
             console.error('Error getting file data from API:', error.response);
         }
         console.log('getFileInformation return true');
-        return completed;
+        return true;
     };
 
     // const checkFileRequests = async () => {
@@ -149,6 +148,17 @@ const UseRequirementData = (files) => {
         }
     };
 
+    const checkResponse = async (interval, timesRun) => {
+        console.log(`checking iteration ${timesRun} for uuid :${uuid}`);
+            const completed = await getFileInformation(uuid, index);
+            console.log('completed:');
+            console.log(completed);
+            if (timesRun > 20 || completed) {
+                clearInterval(interval);
+                console.log(`done getting response for:${uuid}`);
+            }
+    };
+
     const getResponse = async (uuid, index) => {
         console.log(`getting response for:${uuid}`);
         const MINUTE_MS = 30000;
@@ -156,15 +166,8 @@ const UseRequirementData = (files) => {
 
         var timesRun = 0
         const interval = setInterval(() => {
-            console.log(`checking iteration ${timesRun} for uuid :${uuid}`);
-            const completed = getFileInformation(uuid, index);
-            console.log('completed:');
-            console.log(completed);
+            checkResponse(interval, timesRun);
             timesRun += 1;
-            if (timesRun > 20 || completed) {
-                clearInterval(interval);
-                console.log(`done getting response for:${uuid}`);
-            }
         }, MINUTE_MS);
     };
 
