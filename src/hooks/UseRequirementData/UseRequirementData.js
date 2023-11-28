@@ -70,8 +70,8 @@ const UseRequirementData = (files) => {
             })
             if (response.status == 200) {
                 console.log('completed');
-                console.log(`uuid: ${response.data.uuid}`);
-                updateRequestArray({uuid: response.data.uuid, state: 'in progress'}, index);
+                console.log(`uuid: ${response.data.UUID}`);
+                updateRequestArray({uuid: response.data.UUID, state: 'in progress'}, index);
             }
         } catch (error) {
             updateRequestArray({state: 'error'}, index);
