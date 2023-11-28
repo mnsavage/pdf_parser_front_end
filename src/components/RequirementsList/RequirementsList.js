@@ -107,11 +107,11 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
                     key={`Typography-${value['title']}`} 
                     variant='body2'
                   >
-                    {value.title}
+                    {value['title']}
                   </Typography>} 
               />
               {
-                (open.indexOf(value.title) !== -1) ? 
+                (open.indexOf(value['title']) !== -1) ? 
                 <ExpandMore key={`ExpandMore-${value['title']}`}/> : 
                 <ExpandLess key={`ExpandLess-${value['title']}`}/>
               }
