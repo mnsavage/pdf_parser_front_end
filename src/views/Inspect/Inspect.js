@@ -69,12 +69,12 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
   useEffect(() => {
     console.log(`requirementsList updated:`);
     console.log(requirementsList)
-    console.log(requirementsList[0])
-    console.log(typeof requirementsList[0])
-    console.log(requirementsList[0]['header'])
-    console.log(typeof requirementsList[0]['header'])
     // update met conditions
     const newConditions = metConditions.map((conditon, index) => {
+      console.log(conditon)
+      console.log(typeof conditon)
+      console.log(conditon['header'])
+      console.log(typeof conditon['header'])
       if (requirementsList[index] !== null && conditon === null) {
         var metArray = [];
         requirementsList[index]['header'].map((header) => {
