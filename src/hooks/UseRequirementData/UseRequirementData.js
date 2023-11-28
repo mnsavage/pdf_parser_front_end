@@ -6,12 +6,17 @@ import PropTypes from 'prop-types';
 const UseRequirementData = (files) => {
     const [requirementsList, setrequirementsList] = useState(files.map(() => null));
     const apiDomain = jsonData.apiURL
-    const [requestArray, setRequestArray] = useState(files.map(() => {return {state: 'not started'}}));
+    // const [requestArray, setRequestArray] = useState(files.map(() => {return {state: 'not started'}}));
+
+    // useEffect(() => {
+    //     console.log('requestArr updated');
+    //     console.log(requestArray);
+    // }, [requestArray]);
 
     // create the URL for the request
     const createURL = (uuid=null) => {
         return (uuid === null) ? `${apiDomain}upload/`: `${apiDomain}upload/${uuid}`;
-    }
+    };
 
     const updateRequirementList = (newRequirements, updateIndex) => {
         const newRequirementList = requirementsList.map((requirements, index) => {
@@ -21,19 +26,31 @@ const UseRequirementData = (files) => {
                 return requirements;
             }
         })
+        console.log('updating requirements list to:');
+        console.log(newRequirementList);
         setrequirementsList(newRequirementList);
     };
 
-    const updateRequestArray = (newRequest, updateIndex) => {
-        const newRequestArray = requestArray.map((request, index) => {
-            if (index == updateIndex) {
-                return newRequest;
-            } else {
-                return request;
-            }
-        })
-        setRequestArray(newRequestArray);
-    };
+    // const updateRequestArray = (newRequest, updateIndex) => {
+    //     // const newRequestArray = requestArray.map((request, index) => {
+    //     //     if (index == updateIndex) {
+    //     //         return newRequest;
+    //     //     } else {
+    //     //         return request;
+    //     //     }
+    //     // })
+    //     console.log('newRequestArray in func:');
+    //     // console.log(newRequestArray);
+    //     setRequestArray((oldRequirementsArr) => {
+    //         return oldRequirementsArr.map((request, index) => {
+    //             if (index == updateIndex) {
+    //                 return newRequest;
+    //             } else {
+    //                 return request;
+    //             }
+    //         });
+    //     });
+    // };
 
     // convert file to a base 64 encoded string
     const fileToBase64 = async (file) => {
@@ -55,8 +72,6 @@ const UseRequirementData = (files) => {
     
     // post given file
     const postFile = async (file, index) => {
-        console.log('requestArray:');
-        console.log(requestArray);
         try {
             const base64Content = await fileToBase64(file);
             const body = JSON.stringify({
@@ -72,10 +87,11 @@ const UseRequirementData = (files) => {
             if (response.status == 200) {
                 console.log('completed');
                 console.log(`uuid: ${response.data.UUID}`);
-                await updateRequestArray({uuid: response.data.UUID, state: 'in progress'}, index);
+                getResponse(response.data.UUID, index);
+                // await updateRequestArray({uuid: response.data.UUID, state: 'in progress'}, index);
             }
         } catch (error) {
-            await updateRequestArray({state: 'error'}, index);
+            // await updateRequestArray({state: 'error'}, index);
             console.error('Error posting file data from API:', error.response);
         }
     };
@@ -89,65 +105,73 @@ const UseRequirementData = (files) => {
             if (response.status == 200) { // completed
                 console.log('completed');
                 console.log(`output: ${response.data.job_output}`);
-                await updateRequestArray({state: 'completed'}, index);
+                // await updateRequestArray({state: 'completed'}, index);
                 updateRequirementList(response.data.job_output, index);
             }
             else if (response.status == 202) { // in progress
                 console.log(`uuid ${uuid} in progress`);
                 console.log('getFileInformation return true');
-                return true;
+                return false;
             }
         } catch (error) {
             await updateRequestArray({state: 'error'}, index);
             console.error('Error getting file data from API:', error.response);
         }
         console.log('getFileInformation return false');
-        return false;
+        return true;
     };
 
-    const checkFileRequests = async () => {
-        var completed = true;
-        console.log('requestArray:');
-        console.log(requestArray);
-        requestArray.map((request, index) => {
-            if (request.state == 'in progress') {
-                console.log(`checking request of ${request}`)
-                if (getFileInformation(request.uuid, index)) {
-                    completed = false;
-                    console.log(`not completed`);
-                }
-                console.log(`done checking request of ${request}`)
-            }
+    // const checkFileRequests = async () => {
+    //     var completed = true;
+    //     console.log('requestArray:');
+    //     console.log(requestArray);
+    //     requestArray.map((request, index) => {
+    //         if (request.state == 'in progress') {
+    //             console.log(`checking request of ${request}`)
+    //             if (getFileInformation(request.uuid, index)) {
+    //                 completed = false;
+    //                 console.log(`not completed`);
+    //             }
+    //             console.log(`done checking request of ${request}`)
+    //         }
 
-        })
-        return completed
-    }
+    //     })
+    //     return completed
+    // }
 
-    useEffect(() => {
-        console.log('this is run')
-
+    const sendPostRequests = () => {
         for (const index in files) {
+            console.log(`index ${index}`);
             console.log(`begin sending info of file ${index}`);
             postFile(files[index], index);
             console.log(`done sending info of file ${index}`);
         }
+    };
 
+    const getResponse = async (uuid, index) => {
+        console.log(`getting response for:${uuid}`);
         const MINUTE_MS = 30000;
-
-        console.log('requestArray:');
-        console.log(requestArray);
+        await new Promise(r => setTimeout(r, MINUTE_MS));
 
         var timesRun = 0
         const interval = setInterval(() => {
-            console.log(`checking iteration ${timesRun}`);
-            const completed = checkFileRequests();
+            console.log(`checking iteration ${timesRun} for uuid :${uuid}`);
+            const completed = getFileInformation(uuid, index);
             console.log('completed:');
             console.log(completed);
             timesRun += 1;
             if (timesRun > 20 || completed) {
                 clearInterval(interval);
+                console.log(`done getting response for:${uuid}`);
             }
         }, MINUTE_MS);
+    };
+
+    useEffect(() => {
+        console.log('this is run')
+
+        sendPostRequests();
+
     }, [])
 
     return requirementsList;
