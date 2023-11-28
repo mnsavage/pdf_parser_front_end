@@ -58,15 +58,15 @@ const UseRequirementData = (files) => {
         console.log(requestArray);
         try {
             const base64Content = await fileToBase64(file);
-            const response = await axios.post(createURL(), {
+            const body = JSON.stringify({
+                'encoded_pdf': base64Content,
+                'file_name': file.name
+            });
+            const response = await axios.post(createURL(), body,{
                 method: 'post',
                 headers: {
                     Accept: 'application/json'
-                },
-                body: JSON.stringify({
-                    'encoded_pdf': base64Content,
-                    'file_name': file.name
-                }) 
+                } 
             })
             if (response.status == 200) {
                 console.log('completed');
