@@ -71,7 +71,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     console.log(requirementsList)
     // update met conditions
     const newConditions = metConditions.map((conditon, index) => {
-      if (conditon !== null && requirementsList[index] !== null && index == selectedIndex) {
+      if (requirementsList[index] !== null && conditon === null) {
         var metArray = [];
         requirementsList[index].header.map((header) => {
           header.requirements.map((req) => {
@@ -91,7 +91,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
 
     // update met comments
     const newComments = comments.map((comment, index) => {
-      if (comment !== null && requirementsList[index] !== null && index == selectedIndex) {
+      if (requirementsList[index] !== null && comment === null) {
         var commentsArray = [];
         requirementsList[index].header.map((header) => {
           header.requirements.map((req) => {
