@@ -84,6 +84,7 @@ const UseRequirementData = (files) => {
         console.log(`getting info for file with uuid: ${uuid}`);
         try {
             const response = await axios.get(createURL(uuid))
+            console.log(`status: ${response.status}`);
             if (response.status == 200) { // completed
                 console.log('completed');
                 console.log(`output: ${response.data.job_output}`);
