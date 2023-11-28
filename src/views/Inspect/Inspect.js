@@ -71,10 +71,6 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     console.log(requirementsList)
     // update met conditions
     const newConditions = metConditions.map((conditon, index) => {
-      console.log(conditon)
-      console.log(typeof conditon)
-      console.log(conditon['header'])
-      console.log(typeof conditon['header'])
       if (requirementsList[index] !== null && conditon === null) {
         console.log(conditon)
         console.log(typeof conditon)
