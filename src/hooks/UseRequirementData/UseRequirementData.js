@@ -148,7 +148,7 @@ const UseRequirementData = (files) => {
         }
     };
 
-    const checkResponse = async (interval, timesRun) => {
+    const checkResponse = async (uuid, index, interval, timesRun) => {
         console.log(`checking iteration ${timesRun} for uuid :${uuid}`);
             const completed = await getFileInformation(uuid, index);
             console.log('completed:');
@@ -166,7 +166,7 @@ const UseRequirementData = (files) => {
 
         var timesRun = 0
         const interval = setInterval(() => {
-            checkResponse(interval, timesRun);
+            checkResponse(uuid, index, interval, timesRun);
             timesRun += 1;
         }, MINUTE_MS);
     };
