@@ -18,9 +18,7 @@ import './Inspect.css';
 const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirementsList }) => {
   const requirementsList = (testingRequirementsList == null)? UseRequirementData(uploadedFiles) : testingRequirementsList;
   console.log(`requirementsList outside useeffect: ${requirementsList}`);
-  useEffect(() => {
-    console.log(`requirementsList in useeffect: ${requirementsList}`);
-  }, [requirementsList])
+
   const [metConditions, setMetConditions] = useState(
     (testingRequirementsList == null)? (
       uploadedFiles.map(() => null)
@@ -69,6 +67,8 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
   const [editAlertOpen, setEditAlertOpen] = useState(false);
 
   useEffect(() => {
+    console.log(`requirementsList updated:`);
+    console.log(requirementsList)
     // update met conditions
     const newConditions = metConditions.map((conditon, index) => {
       if (conditon !== null && requirementsList[index] !== null && index == selectedIndex) {
@@ -85,6 +85,8 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
         return conditon;
       }
     })
+    console.log('met conditions update:');
+    console.log(newConditions);
     setMetConditions(newConditions);
 
     // update met comments
@@ -101,6 +103,8 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
         return comment;
       }
     })
+    console.log('comments updated:');
+    console.log(newComments);
     setComments(newComments);
   }, [requirementsList]);
 
