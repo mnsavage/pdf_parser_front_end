@@ -98,9 +98,10 @@ const UseRequirementData = (files) => {
 
     // get information from posted files, returns if another call needs to be made
     const getFileInformation = async (uuid, index) => {
+        var completed = true;
         console.log(`getting info for file with uuid: ${uuid}`);
         try {
-            const response = await axios.get(createURL(uuid))
+            const response = await axios.get(createURL(uuid));
             console.log(`status: ${response.status}`);
             if (response.status == 200) { // completed
                 console.log('completed');
@@ -110,15 +111,15 @@ const UseRequirementData = (files) => {
             }
             else if (response.status == 202) { // in progress
                 console.log(`uuid ${uuid} in progress`);
-                console.log('getFileInformation return true');
-                return false;
+                console.log('getFileInformation return false');
+                completed = false;
             }
         } catch (error) {
-            await updateRequestArray({state: 'error'}, index);
+            // await updateRequestArray({state: 'error'}, index);
             console.error('Error getting file data from API:', error.response);
         }
-        console.log('getFileInformation return false');
-        return true;
+        console.log('getFileInformation return true');
+        return completed;
     };
 
     // const checkFileRequests = async () => {
