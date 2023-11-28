@@ -28,11 +28,11 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
           return null;
         }
         var metArray = [];
-        file.header.map((header) => {
-          header.requirements.map((req) => {
-            metArray[req.title] = (req.met === null) ?
+        file['header'].map((header) => {
+          header['requirements'].map((req) => {
+            metArray[req['title']] = (req.met === null) ?
               {met: false, automated: false, edited: false} :
-              {met: req.met, automated: true, edited: false}
+              {met: req['met'], automated: true, edited: false}
           })
         })
         return metArray;
@@ -48,9 +48,9 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
           return null;
         }
         var commentsArray = [];
-        file.header.map((header) => {
-          header.requirements.map((req) => {
-            commentsArray[req.title] = '';
+        file['header'].map((header) => {
+          header['requirements'].map((req) => {
+            commentsArray[req['title']] = '';
           })
         })
         return commentsArray;
@@ -73,11 +73,11 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     const newConditions = metConditions.map((conditon, index) => {
       if (requirementsList[index] !== null && conditon === null) {
         var metArray = [];
-        requirementsList[index].header.map((header) => {
-          header.requirements.map((req) => {
-            metArray[req.title] = (req === null) ?
+        requirementsList[index]['header'].map((header) => {
+          header['requirements'].map((req) => {
+            metArray[req['title']] = (req === null) ?
             {met: false, automated: false, edited: false} :
-            {met: req.met, automated: true, edited: false}
+            {met: req['met'], automated: true, edited: false}
           })
         })
         return metArray;
@@ -93,9 +93,9 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     const newComments = comments.map((comment, index) => {
       if (requirementsList[index] !== null && comment === null) {
         var commentsArray = [];
-        requirementsList[index].header.map((header) => {
-          header.requirements.map((req) => {
-            commentsArray[req.title] = '';
+        requirementsList[index]['header'].map((header) => {
+          header['requirements'].map((req) => {
+            commentsArray[req['title']] = '';
           })
         })
         return commentsArray;
@@ -222,7 +222,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
           <FormControlLabel control={<Switch onChange={handleUnmetSwitch} />} label='Show only unmet conditons' className='switch' />
           <div className='requirements-list-container'>
             <RequirementsList 
-              requirementsList={(requirementsList[selectedIndex] === null) ? null : requirementsList[selectedIndex].header} 
+              requirementsList={(requirementsList[selectedIndex] === null) ? null : requirementsList[selectedIndex]['header']} 
               metConditions={selectedMetConditions} 
               setMetConditions={setSelectedMetConditions}
               comments={selectedComments} 

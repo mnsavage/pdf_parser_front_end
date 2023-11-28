@@ -94,17 +94,17 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
           <>
             <ListItemButton 
               style={{backgroundColor: '#9E1B32', color: 'white'}}
-              key={`ListItemButton-${value.title}`}
+              key={`ListItemButton-${value['title']}`}
               className='expandable-header'
-              onClick={handleOpen(value.title)}
+              onClick={handleOpen(value['title'])}
             >
               <ListItemText 
-                key={`ListItemText-${value.title}`} 
+                key={`ListItemText-${value['title']}`} 
                 disableTypography="true"
                 className='header-title' 
                 primary={
                   <Typography 
-                    key={`Typography-${value.title}`} 
+                    key={`Typography-${value['title']}`} 
                     variant='body2'
                   >
                     {value.title}
@@ -112,55 +112,55 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
               />
               {
                 (open.indexOf(value.title) !== -1) ? 
-                <ExpandMore key={`ExpandMore-${value.title}`}/> : 
-                <ExpandLess key={`ExpandLess-${value.title}`}/>
+                <ExpandMore key={`ExpandMore-${value['title']}`}/> : 
+                <ExpandLess key={`ExpandLess-${value['title']}`}/>
               }
             </ListItemButton>
             <Collapse 
-              in={open.indexOf(value.title) == -1} 
-              key={`Collapse-${value.title}`} 
+              in={open.indexOf(value['title']) == -1} 
+              key={`Collapse-${value['title']}`} 
               timeout='auto' 
               unmountOnExit
             >
-              <List key={`Lists-${value.title}`}>
-                {value.requirements.filter(value => !showUnmet || metConditions[value.title].met ).map((req => {
+              <List key={`Lists-${value['title']}`}>
+                {value['requirements'].filter(value => !showUnmet || metConditions[value['title']]['met'] ).map((req => {
                   return (
                     <>
                     <ListItem
-                      key={`ListItemButton-${req.title}`}
+                      key={`ListItemButton-${req['title']}`}
                       role={undefined}
                       
-                      className={`requirement-item-${metConditions[req.title].automated ? 'automated' : 'not-automated'}`}
+                      className={`requirement-item-${metConditions[req['title']].automated ? 'automated' : 'not-automated'}`}
                       dense
                     >
-                      <List key={`List-${req.title}`} className='sublist'>
-                        <ListItem key={`outerListItem-${req.title}`}>
+                      <List key={`List-${req['title']}`} className='sublist'>
+                        <ListItem key={`outerListItem-${req['title']}`}>
                           <ListItemIcon
-                            key={`ListItemIcon-${req.title}`}
+                            key={`ListItemIcon-${req['title']}`}
                             data-testid='checkbox'
-                            onClick={handleCheck(req.title)}
+                            onClick={handleCheck(req['title'])}
                           >
                             <Checkbox
-                              checked={metConditions[req.title].met}
+                              checked={metConditions[req['title']]['met']}
                               tabIndex={-1}
-                              key={`Checkbox-${req.title}`}
+                              key={`Checkbox-${req['title']}`}
                               disableRipple
-                              id={`Checkbox-${req.title}`} />
+                              id={`Checkbox-${req['title']}`} />
                           </ListItemIcon>
                           <ListItemText
                             className='requirement-text'
-                            key={`ListItemText-${req.title}`}
+                            key={`ListItemText-${req['title']}`}
                             disabletypography="true"
                             primary={<Typography
-                              key={`Typography-${req.title}`}
+                              key={`Typography-${req['title']}`}
                               variant='body3'
                             >
-                              {req.title}
+                              {req['title']}
                             </Typography>} />
                         </ListItem>
-                        {metConditions[req.title].edited &&
+                        {metConditions[req['title']].edited &&
                           <Typography
-                            key={`Typography-edited-${req.title}`}
+                            key={`Typography-edited-${req['title']}`}
                             className='edited-symbol'
                             variant='body4'
                           >
@@ -168,38 +168,38 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
                           </Typography>}
                       </List>
                       <ListItemButton
-                          key={`ListItemButtonComment-${req.title}`}
+                          key={`ListItemButtonComment-${req['title']}`}
                           role={undefined}
                           className='comment-button'
                           data-testid='comment-button'
-                          onClick={handleOpenComment(req.title)}
+                          onClick={handleOpenComment(req['title'])}
                           disableRipple
                       >
-                        <ListItemIcon key={`ListItemIconComment-${req.title}`}>
+                        <ListItemIcon key={`ListItemIconComment-${req['title']}`}>
                           <Comment
                             className='comment'
-                            key={`CommentIcon-${req.title}`}
+                            key={`CommentIcon-${req['title']}`}
                           />
                         </ListItemIcon>
                       </ListItemButton>
                     </ListItem>
                     <Collapse
-                      in={openComment == req.title}
-                      key={`CollapseComment-${req.title}`}
+                      in={openComment == req['title']}
+                      key={`CollapseComment-${req['title']}`}
                       timeout='auto'
                       unmountOnExit
                     >
-                      <List component='div' key={`ListComment-${req.title}`}>
+                      <List component='div' key={`ListComment-${req['title']}`}>
                         <TextField
-                          key={`CommentTextArea-${req.title}`}
+                          key={`CommentTextArea-${req['title']}`}
                           className='comment-text-area'
                           disabled={disabled}
                           label="Comment"
                           placeholder="Add comment here"
                           inputProps={{style: {fontSize: 15, lineHeight: 1.2}}}
-                          value={comments[req.title]}
+                          value={comments[req['title']]}
                           onChange={(event) => {
-                            updateComment(req.title, event.target.value);
+                            updateComment(req['title'], event.target.value);
                           }}
                           multiline
                           focused
