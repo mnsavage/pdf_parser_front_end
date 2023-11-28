@@ -71,37 +71,41 @@ const UseRequirementData = (files) => {
             if (response.status == 200) {
                 console.log('completed');
                 console.log(`uuid: ${response.data.UUID}`);
-                updateRequestArray({uuid: response.data.UUID, state: 'in progress'}, index);
+                await updateRequestArray({uuid: response.data.UUID, state: 'in progress'}, index);
             }
         } catch (error) {
-            updateRequestArray({state: 'error'}, index);
+            await updateRequestArray({state: 'error'}, index);
             console.error('Error posting file data from API:', error.response);
         }
     };
 
     // get information from posted files, returns if another call needs to be made
     const getFileInformation = async (uuid, index) => {
+        console.log(`getting info for file with uuid: ${uuid}`);
         try {
             const response = await axios.get(createURL(uuid))
             if (response.status == 200) { // completed
-                console.log('completed')
+                console.log('completed');
                 console.log(`output: ${response.data.job_output}`);
-                updateRequestArray({state: 'completed'}, index);
+                await updateRequestArray({state: 'completed'}, index);
                 updateRequirementList(response.data.job_output, index);
             }
             else if (response.status == 202) { // in progress
                 console.log(`uuid ${uuid} in progress`);
+                console.log('getFileInformation return true');
                 return true;
             }
         } catch (error) {
-            updateRequestArray({state: 'error'}, index);
+            await updateRequestArray({state: 'error'}, index);
             console.error('Error getting file data from API:', error.response);
         }
-        return false
+        console.log('getFileInformation return false');
+        return false;
     };
 
     const checkFileRequests = async () => {
         var completed = true;
+        console.log(`requestArray: ${requestArray}`);
         requestArray.map((request, index) => {
             if (request.state == 'in progress') {
                 console.log(`checking request of ${request}`)
@@ -120,18 +124,20 @@ const UseRequirementData = (files) => {
         console.log('this is run')
 
         for (const index in files) {
-            console.log(`begin sending info of file ${index}`)
+            console.log(`begin sending info of file ${index}`);
             postFile(files[index], index);
-            console.log(`done sending info of file ${index}`)
+            console.log(`done sending info of file ${index}`);
         }
 
         const MINUTE_MS = 30000;
+
+        console.log(`requestArray: ${requestArray}`);
 
         var timesRun = 0
         const interval = setInterval(() => {
             console.log(`checking iteration`)
             const completed = checkFileRequests();
-            console.log(completed)
+            console.log(`completed: ${completed}`);
             timesRun += 1;
             if (timesRun > 20 || completed) {
                 clearInterval(interval);
