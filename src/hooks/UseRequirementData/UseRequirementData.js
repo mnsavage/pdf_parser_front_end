@@ -21,7 +21,7 @@ const UseRequirementData = (files) => {
     const updateRequirementList = (newRequirements, updateIndex) => {
         const newRequirementList = requirementsList.map((requirements, index) => {
             if (index == updateIndex) {
-                return newRequirements;
+                return JSON.parse(newRequirements);
             } else {
                 return requirements;
             }
