@@ -28,7 +28,7 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
   const handleOpen = (value) => () => {
     const currentIndex = open.indexOf(value);
     const newOpen = [...open];
-    if (currentIndex === -1) {
+    if (currentIndex == -1) {
         newOpen.push(value);
     } else {
         newOpen.splice(currentIndex, 1);
@@ -40,7 +40,7 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
   const handleOpenComment = (value) => () => {
     if (value == openComment) {
       setOpenComment('');
-    } else if (!disabled || comments[value] !== '') {
+    } else if (!disabled || comments[value] != '') {
       setOpenComment(value);
     }
   };
@@ -75,7 +75,7 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
     setComments(newComments);
   };
 
-  if (requirementsList === null || metConditions === null || comments === null) {
+  if (requirementsList == null || metConditions == null || comments == null) {
     return (
       <div className='loading-div'>
         <CircularProgress 
@@ -111,7 +111,7 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
                   </Typography>} 
               />
               {
-                (open.indexOf(value['title']) !== -1) ? 
+                (open.indexOf(value['title']) != -1) ? 
                 <ExpandMore key={`ExpandMore-${value['title']}`}/> : 
                 <ExpandLess key={`ExpandLess-${value['title']}`}/>
               }

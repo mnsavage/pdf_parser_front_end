@@ -15,7 +15,7 @@ const UseRequirementData = (files) => {
 
     // create the URL for the request
     const createURL = (uuid=null) => {
-        return (uuid === null) ? `${apiDomain}upload/`: `${apiDomain}upload/${uuid}`;
+        return (uuid == null) ? `${apiDomain}upload/`: `${apiDomain}upload/${uuid}`;
     };
 
     const updateRequirementList = (newRequirements, updateIndex) => {
