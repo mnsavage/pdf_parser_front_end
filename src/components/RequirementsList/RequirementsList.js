@@ -5,6 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import Comment from '@mui/icons-material/Comment';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -15,9 +16,10 @@ import CircularProgress from '@mui/material/CircularProgress'
 import PropTypes from 'prop-types';
 import './RequirementsList.css';
 
-const RequirementsList = ({ requirementsList, metConditions, setMetConditions, comments, setComments, disabled, showUnmet }) => {
+const RequirementsList = ({ requirementsList, metConditions, setMetConditions, comments, setComments, error, disabled, showUnmet }) => {
   const [open, setOpen] = useState([]);
   const [openComment, setOpenComment] = useState('');
+  console.log(`rendered with requirementsList: {requirementsList == null}, metConditions: {metConditions == null}, comments: {comments = null}`)
 
   // when a new paper is selected, make sure all comments are closed
   useEffect(() => {
@@ -74,6 +76,26 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
     }
     setComments(newComments);
   };
+
+  if (error) {
+    return (
+      <div className='loading-div'>
+        <ErrorOutline 
+          className='error-icon' 
+          color='primary'
+          style={{'width': '50px', 'height': '50px'}}
+          data-testid = 'error-icon'
+        />
+        <Typography 
+          className='error'
+          key={'error-typography'} 
+          variant='body4'
+        >
+          Error Fetching Requirements
+        </Typography>
+      </div>
+    )
+  }
 
   if (requirementsList == null || metConditions == null || comments == null) {
     return (
@@ -224,6 +246,7 @@ RequirementsList.propTypes = {
     setMetConditions: PropTypes.func.isRequired,
     comments: PropTypes.array,
     setComments: PropTypes.func.isRequired,
+    error: PropTypes.bool.isRequired,
     disabled: PropTypes.bool.isRequired,
     showUnmet: PropTypes.bool.isRequired,
 };

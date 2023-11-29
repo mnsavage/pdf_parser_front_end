@@ -24,11 +24,11 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
       uploadedFiles.map(() => null)
     ) : (
       requirementsList.map((file) => {
-        if (file == null) {
+        if (file['response'] == null) {
           return null;
         }
         var metArray = [];
-        file['header'].map((header) => {
+        file['response']['header'].map((header) => {
           header['requirements'].map((req) => {
             metArray[req['title']] = (req.met == null) ?
               {met: false, automated: false, edited: false} :
@@ -44,11 +44,11 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
       uploadedFiles.map(() => null)
     ) : (
       requirementsList.map((file) => {
-        if (file == null) {
+        if (file['response'] == null) {
           return null;
         }
         var commentsArray = [];
-        file['header'].map((header) => {
+        file['response']['header'].map((header) => {
           header['requirements'].map((req) => {
             commentsArray[req['title']] = '';
           })
@@ -69,21 +69,16 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
   useEffect(() => {
     console.log(`requirementsList updated:`);
     console.log(requirementsList)
-    if (requirementsList[0] != null) {
-      console.log(requirementsList[0]);
-      console.log(typeof requirementsList[0]);
-      console.log(requirementsList[0]['header']);
-      console.log(typeof requirementsList[0]['header']);
-    };
     // update met conditions
     const newConditions = metConditions.map((conditon, index) => {
-      if (requirementsList[index] != null && conditon == null) {
+      if (requirementsList[index]['response'] != null && conditon == null) {
         var metArray = [];
-        requirementsList[index]['header'].map((header) => {
+        requirementsList[index]['response']['header'].map((header) => {
           header['requirements'].map((req) => {
-            metArray[req['title']] = (req == null) ?
-            {met: false, automated: false, edited: false} :
-            {met: req['met'], automated: true, edited: false}
+            console.log(`for req: ${req['title']} it is automated: ${req['met'] == null}`)
+            metArray[req['title']] = (req['met'] == null) ?
+              {met: false, automated: false, edited: false} :
+              {met: req['met'], automated: true, edited: false}
           })
         })
         return metArray;
@@ -97,9 +92,9 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
 
     // update met comments
     const newComments = comments.map((comment, index) => {
-      if (requirementsList[index] != null && comment == null) {
+      if (requirementsList[index]['response'] != null && comment == null) {
         var commentsArray = [];
-        requirementsList[index]['header'].map((header) => {
+        requirementsList[index]['response']['header'].map((header) => {
           header['requirements'].map((req) => {
             commentsArray[req['title']] = '';
           })
@@ -118,7 +113,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
     setSelectedMetConditions(metConditions[selectedIndex]);
     setSelectedComments(comments[selectedIndex]);
-  }, [selectedIndex]);
+  }, [selectedIndex, metConditions, comments]);
 
   // Check if any edits were made
   const checkEdits = () => {
@@ -218,21 +213,36 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
           <div className='left-container'>
             <UnderlineHeader title='Uploaded Files' />
             <div className='confirm-list-container'>
-              <FileList selectedIndex={selectedIndex} names={requirementsList.map((element) => (element == null) ? null : element['newName'])} handleListItemClick={handleListItemClick} />
+              <FileList
+                selectedIndex={selectedIndex}
+                names={requirementsList.map((element, index) => (element['response'] == null) ? uploadedFiles[index].name : element['response']['newName'])} 
+                status={requirementsList.map((element) => element['status'])}
+                handleListItemClick={handleListItemClick}
+              />
             </div>
           </div>
         )}
         <div className='vl'></div>
         <div className='right-list-container'>
-          <Typography variant='body3' className='automated-label'>* Automated requirements are outlined</Typography>
-          <FormControlLabel control={<Switch onChange={handleUnmetSwitch} />} label='Show only unmet conditons' className='switch' />
+          {(requirementsList[selectedIndex]['response'] != null) ? (
+            <>
+              {(requirementsList[selectedIndex]['status'] == 'error') ? (
+                <Typography variant='body3' className='automated-label'>* Requirements were unable to be automated</Typography>
+              ) : (
+                <Typography variant='body3' className='automated-label-outlined'>* Automated requirements are outlined</Typography>
+              )}
+              <FormControlLabel control={<Switch onChange={handleUnmetSwitch} />} label='Show only unmet conditons' className='switch' />
+            </>
+          ) : (<div />)
+          }
           <div className='requirements-list-container'>
             <RequirementsList 
-              requirementsList={(requirementsList[selectedIndex] == null) ? null : requirementsList[selectedIndex]['header']} 
+              requirementsList={(requirementsList[selectedIndex]['response'] == null) ? null : requirementsList[selectedIndex]['response']['header']} 
               metConditions={selectedMetConditions} 
               setMetConditions={setSelectedMetConditions}
               comments={selectedComments} 
-              setComments={setSelectedComments} 
+              setComments={setSelectedComments}
+              error={requirementsList[selectedIndex]['status'] == 'api error'} 
               disabled={!editing} 
               showUnmet={showUnmet} 
             />

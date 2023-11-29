@@ -14,6 +14,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -32,6 +33,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -52,6 +54,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -68,6 +71,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -88,6 +92,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -103,6 +108,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={true} 
                 showUnmet={false} 
             />
@@ -123,6 +129,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={jest.fn()}
+                error={false}
                 disabled={true} 
                 showUnmet={false} 
             />
@@ -143,6 +150,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={jest.fn()}
+                error={false}
                 disabled={true} 
                 showUnmet={false} 
             />
@@ -163,6 +171,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -183,6 +192,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -203,6 +213,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -227,6 +238,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -252,6 +264,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={setComments}
+                error={false}
                 disabled={true} 
                 showUnmet={false} 
             />
@@ -277,6 +290,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={setComments}
+                error={false}
                 disabled={true} 
                 showUnmet={false} 
             />
@@ -302,6 +316,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={setComments}
+                error={false}
                 disabled={true} 
                 showUnmet={false} 
             />
@@ -326,6 +341,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -355,6 +371,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -372,6 +389,7 @@ describe('RequirementsList', () => {
                 setMetConditions={setMetConditions}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -392,6 +410,7 @@ describe('RequirementsList', () => {
                 setMetConditions={setMetConditions}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={true} 
                 showUnmet={false} 
             />
@@ -411,6 +430,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={true} 
             />
@@ -431,6 +451,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -451,6 +472,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -467,6 +489,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />
@@ -483,6 +506,7 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={null}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
                 showUnmet={false} 
             />

@@ -238,8 +238,8 @@ const CreateSummary = (requirementsList, metConditions, comments) => {
 
     requirementsList.map((file, index) => {
         console.log(file)
-        if (file !== null) {
-            createDoc(file, index);
+        if (file['response'] !== null) {
+            createDoc(file['response'], index);
         }
     })
 

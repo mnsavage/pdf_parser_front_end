@@ -60,6 +60,14 @@
     position: absolute;
     left: 32px;
     top: 36px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.automated-label-outlined {
+    position: absolute;
+    left: 32px;
+    top: 36px;
     border: 1px solid #9E1B32;
     border-radius: 5px;
     padding-left: 8px;

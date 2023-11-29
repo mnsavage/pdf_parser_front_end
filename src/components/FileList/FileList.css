@@ -10,3 +10,7 @@
 .skeleton {
     width: 95%;
 }
+
+.error-text {
+    padding-left: 10px;
+}

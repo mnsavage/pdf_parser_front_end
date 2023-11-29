@@ -2,16 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import jsonData from '../../config.json';
 import PropTypes from 'prop-types';
+import InspectMocks from '../../views/Inspect/_test_/mocks'
 
 const UseRequirementData = (files) => {
-    const [requirementsList, setrequirementsList] = useState(files.map(() => null));
-    const apiDomain = jsonData.apiURL
-    // const [requestArray, setRequestArray] = useState(files.map(() => {return {state: 'not started'}}));
-
-    // useEffect(() => {
-    //     console.log('requestArr updated');
-    //     console.log(requestArray);
-    // }, [requestArray]);
+    const [requirementsList, setrequirementsList] = useState(files.map(() => {return {status: 'loading', response: null}}));
+    const apiDomain = jsonData.apiURL;
 
     // create the URL for the request
     const createURL = (uuid=null) => {
@@ -21,7 +16,7 @@ const UseRequirementData = (files) => {
     const updateRequirementList = (newRequirements, updateIndex) => {
         const newRequirementList = requirementsList.map((requirements, index) => {
             if (index == updateIndex) {
-                return JSON.parse(newRequirements);
+                return newRequirements;
             } else {
                 return requirements;
             }
@@ -30,27 +25,6 @@ const UseRequirementData = (files) => {
         console.log(newRequirementList);
         setrequirementsList(newRequirementList);
     };
-
-    // const updateRequestArray = (newRequest, updateIndex) => {
-    //     // const newRequestArray = requestArray.map((request, index) => {
-    //     //     if (index == updateIndex) {
-    //     //         return newRequest;
-    //     //     } else {
-    //     //         return request;
-    //     //     }
-    //     // })
-    //     console.log('newRequestArray in func:');
-    //     // console.log(newRequestArray);
-    //     setRequestArray((oldRequirementsArr) => {
-    //         return oldRequirementsArr.map((request, index) => {
-    //             if (index == updateIndex) {
-    //                 return newRequest;
-    //             } else {
-    //                 return request;
-    //             }
-    //         });
-    //     });
-    // };
 
     // convert file to a base 64 encoded string
     const fileToBase64 = async (file) => {
@@ -88,10 +62,11 @@ const UseRequirementData = (files) => {
                 console.log('completed');
                 console.log(`uuid: ${response.data.UUID}`);
                 getResponse(response.data.UUID, index);
-                // await updateRequestArray({uuid: response.data.UUID, state: 'in progress'}, index);
+            } else {
+                updateRequirementList({status: 'api error', response: null}, index);
             }
         } catch (error) {
-            // await updateRequestArray({state: 'error'}, index);
+            updateRequirementList({status: 'api error', response: null}, index);
             console.error('Error posting file data from API:', error.response);
         }
     };
@@ -105,47 +80,21 @@ const UseRequirementData = (files) => {
             if (response.status == 200) { // completed
                 console.log('completed');
                 console.log(`output: ${response.data.job_output}`);
-                // await updateRequestArray({state: 'completed'}, index);
-                updateRequirementList(response.data.job_output, index);
-            }
-            else if (response.status == 202) { // in progress
+                updateRequirementList({status: 'success', response: JSON.parse(response.data.job_output)}, index);
+            } else if (response.status == 202) { // in progress
                 console.log(`uuid ${uuid} in progress`);
                 console.log('getFileInformation return false');
                 return false;
+            } else if (response.status == 400) { //error
+                updateRequirementList({status: 'error', response: JSON.parse(response.data.job_output)}, index);
             }
         } catch (error) {
-            // await updateRequestArray({state: 'error'}, index);
+            updateRequirementList({status: 'api error', response: null}, index);
+            console.log(`uuid ${uuid} returned error`);
             console.error('Error getting file data from API:', error.response);
         }
         console.log('getFileInformation return true');
         return true;
-    };
-
-    // const checkFileRequests = async () => {
-    //     var completed = true;
-    //     console.log('requestArray:');
-    //     console.log(requestArray);
-    //     requestArray.map((request, index) => {
-    //         if (request.state == 'in progress') {
-    //             console.log(`checking request of ${request}`)
-    //             if (getFileInformation(request.uuid, index)) {
-    //                 completed = false;
-    //                 console.log(`not completed`);
-    //             }
-    //             console.log(`done checking request of ${request}`)
-    //         }
-
-    //     })
-    //     return completed
-    // }
-
-    const sendPostRequests = () => {
-        for (const index in files) {
-            console.log(`index ${index}`);
-            console.log(`begin sending info of file ${index}`);
-            postFile(files[index], index);
-            console.log(`done sending info of file ${index}`);
-        }
     };
 
     const checkResponse = async (uuid, index, interval, timesRun) => {
@@ -171,10 +120,24 @@ const UseRequirementData = (files) => {
         }, MINUTE_MS);
     };
 
-    useEffect(() => {
-        console.log('this is run')
+    // const testFun = async () => {
+    //     const MINUTE_MS = 300;
+    //     await new Promise(r => setTimeout(r, MINUTE_MS));
+    //     updateRequirementList({status: 'error', response:null}, 0);
 
-        sendPostRequests();
+    // };
+
+    useEffect(() => {
+        console.log('this is run');
+
+        // testFun();
+
+        for (const index in files) {
+            console.log(`index ${index}`);
+            console.log(`begin sending info of file ${index}`);
+            postFile(files[index], index);
+            console.log(`done sending info of file ${index}`);
+        }
 
     }, [])
 
