@@ -99,7 +99,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
 
     // update comments
     setComments((oldComments) => {
-      return oldCommentscomments.map((comment, index) => {
+      return oldComments.map((comment, index) => {
         if (requirementsList[index]['response'] != null && comment == null) {
           var commentsArray = [];
           requirementsList[index]['response']['header'].map((header) => {
