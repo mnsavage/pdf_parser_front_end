@@ -13,16 +13,16 @@ const UseRequirementData = (files) => {
     };
 
     const updateRequirementList = (newRequirements, updateIndex) => {
-        const newRequirementList = requirementsList.map((requirements, index) => {
-            if (index == updateIndex) {
-                return newRequirements;
-            } else {
-                return requirements;
-            }
-        })
-        console.log('updating requirements list to:');
-        console.log(newRequirementList);
-        setrequirementsList(newRequirementList);
+        console.log('updating requirements list');
+        setrequirementsList((oldRequirementList) => {
+            return oldRequirementList.map((requirements, index) => {
+                if (index == updateIndex) {
+                    return newRequirements;
+                } else {
+                    return requirements;
+                }
+            });
+        });
     };
 
     // convert file to a base 64 encoded string

@@ -78,43 +78,41 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     console.log(`requirementsList updated:`);
     console.log(requirementsList)
     // update met conditions
-    const newConditions = metConditions.map((conditon, index) => {
-      if (requirementsList[index]['response'] != null && conditon == null) {
-        var metArray = [];
-        requirementsList[index]['response']['header'].map((header) => {
-          header['requirements'].map((req) => {
-            console.log(`for req: ${req['title']} it is automated: ${req['met'] == null}`)
-            metArray[req['title']] = (req['met'] == null) ?
-              {met: false, automated: false, edited: false} :
-              {met: req['met'], automated: true, edited: false}
+    setMetConditions((oldConditions) => {
+      return oldConditions.map((conditon, index) => {
+        if (requirementsList[index]['response'] != null && conditon == null) {
+          var metArray = [];
+          requirementsList[index]['response']['header'].map((header) => {
+            header['requirements'].map((req) => {
+              console.log(`for req: ${req['title']} it is automated: ${req['met'] == null}`)
+              metArray[req['title']] = (req['met'] == null) ?
+                {met: false, automated: false, edited: false} :
+                {met: req['met'], automated: true, edited: false}
+            })
           })
-        })
-        return metArray;
-      } else {
-        return conditon;
-      }
-    })
-    console.log('met conditions update:');
-    console.log(newConditions);
-    setMetConditions(newConditions);
+          return metArray;
+        } else {
+          return conditon;
+        }
+      });
+    });
 
-    // update met comments
-    const newComments = comments.map((comment, index) => {
-      if (requirementsList[index]['response'] != null && comment == null) {
-        var commentsArray = [];
-        requirementsList[index]['response']['header'].map((header) => {
-          header['requirements'].map((req) => {
-            commentsArray[req['title']] = '';
+    // update comments
+    setComments((oldComments) => {
+      return oldCommentscomments.map((comment, index) => {
+        if (requirementsList[index]['response'] != null && comment == null) {
+          var commentsArray = [];
+          requirementsList[index]['response']['header'].map((header) => {
+            header['requirements'].map((req) => {
+              commentsArray[req['title']] = '';
+            })
           })
-        })
-        return commentsArray;
-      } else {
-        return comment;
-      }
-    })
-    console.log('comments updated:');
-    console.log(newComments);
-    setComments(newComments);
+          return commentsArray;
+        } else {
+          return comment;
+        }
+      });
+    });
   }, [requirementsList]);
 
   // set selected metConditions and comments when they are updated
