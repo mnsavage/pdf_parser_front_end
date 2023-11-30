@@ -16,9 +16,13 @@ import UseRequirementData from '../../hooks/UseRequirementData/UseRequirementDat
 import './Inspect.css';
 
 const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirementsList }) => {
+
+  // list of fetched requirements for all PDFs
+  // if a testingRequirementsList is provided, that is used
   const requirementsList = (testingRequirementsList == null)? UseRequirementData(uploadedFiles) : testingRequirementsList;
   console.log(`requirementsList outside useeffect: ${requirementsList}`);
 
+  // tracks what conditions are met
   const [metConditions, setMetConditions] = useState(
     (testingRequirementsList == null)? (
       uploadedFiles.map(() => null)
@@ -26,19 +30,21 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
       requirementsList.map((file) => {
         if (file['response'] == null) {
           return null;
-        }
+        };
         var metArray = [];
         file['response']['header'].map((header) => {
           header['requirements'].map((req) => {
             metArray[req['title']] = (req.met == null) ?
               {met: false, automated: false, edited: false} :
-              {met: req['met'], automated: true, edited: false}
+              {met: req['met'], automated: true, edited: false};
           })
-        })
+        });
         return metArray;
       })
     )
   );
+
+  // tracks comments
   const [comments, setComments] = useState(
     (testingRequirementsList == null)? (
       uploadedFiles.map(() => null)
@@ -57,6 +63,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
       })
     )
   );
+
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedMetConditions, setSelectedMetConditions] = useState(metConditions[selectedIndex]);
   const [selectedComments, setSelectedComments] = useState(comments[selectedIndex]);
@@ -66,6 +73,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
   const [alertOpen, setAlertOpen] = useState(false);
   const [editAlertOpen, setEditAlertOpen] = useState(false);
 
+  // when the requirements list is updated, call to update metConditions and comments accordingly
   useEffect(() => {
     console.log(`requirementsList updated:`);
     console.log(requirementsList)
@@ -109,6 +117,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     setComments(newComments);
   }, [requirementsList]);
 
+  // set selected metConditions and comments when they are updated
   useEffect(() => {
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
     setSelectedMetConditions(metConditions[selectedIndex]);
@@ -120,10 +129,10 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     for (var key in selectedMetConditions) {
       if (selectedMetConditions[key].met != metConditions[selectedIndex][key].met) {
         return false;
-      }
+      };
       if (selectedComments[key] != comments[selectedIndex][key]) {
         return false;
-      }
+      };
     }
     return true;  
   };
@@ -137,8 +146,8 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
           return selectedMetConditions;
         } else {
           return conditon;
-        }
-      })
+        };
+      });
       setMetConditions(newConditions);
 
       // update met comments
@@ -147,8 +156,8 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
           return selectedComments;
         } else {
           return comment;
-        }
-      })
+        };
+      });
       setComments(newComments);
     }
     setEditing(!editing);   
@@ -163,8 +172,8 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
         newCond[key] = {met: !selectedMetConditions[key].met, automated: true, edited: false};
       } else {
         newCond[key] = selectedMetConditions[key];
-      }
-    }
+      };
+    };
     setSelectedMetConditions(newCond);
   };
 
@@ -215,7 +224,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
             <div className='confirm-list-container'>
               <FileList
                 selectedIndex={selectedIndex}
-                names={requirementsList.map((element, index) => (element['response'] == null) ? uploadedFiles[index].name : element['response']['newName'])} 
+                names={requirementsList.map((element, index) => (element['response'] == null || element['response']['newName'] == null) ? uploadedFiles[index].name : element['response']['newName'])} 
                 status={requirementsList.map((element) => element['status'])}
                 handleListItemClick={handleListItemClick}
               />
@@ -293,11 +302,11 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
               setEditing(false);
             } else {
               setEditAlertOpen(true);
-            }
+            };
           } else {
             setAlertOpen(true);
           }
-          }} 
+          }}
         />
       </Box>
     </>

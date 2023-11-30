@@ -9,6 +9,8 @@ import './FileList.css';
 
 const FileList = ({ selectedIndex, names, status, handleListItemClick }) => {
   
+  // status, an array to display the status of each file name can be optionally passed in
+  // on loading, will show a loading skelton, on error will show an error icon
   const createFileContents = (value, index) => {
     if (status != null && status[index] == 'loading') {
       return (

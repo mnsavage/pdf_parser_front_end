@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import jsonData from '../../config.json';
 import PropTypes from 'prop-types';
-import InspectMocks from '../../views/Inspect/_test_/mocks'
 
 const UseRequirementData = (files) => {
     const [requirementsList, setrequirementsList] = useState(files.map(() => {return {status: 'loading', response: null}}));
@@ -85,7 +84,7 @@ const UseRequirementData = (files) => {
                 console.log(`uuid ${uuid} in progress`);
                 console.log('getFileInformation return false');
                 return false;
-            } else if (response.status == 400) { //error
+            } else if (response.status == 404) { //error
                 updateRequirementList({status: 'error', response: JSON.parse(response.data.job_output)}, index);
             }
         } catch (error) {
@@ -110,8 +109,8 @@ const UseRequirementData = (files) => {
 
     const getResponse = async (uuid, index) => {
         console.log(`getting response for:${uuid}`);
-        const MINUTE_MS = 30000;
-        await new Promise(r => setTimeout(r, MINUTE_MS));
+        const waitTime = 30000;
+        await new Promise(r => setTimeout(r, waitTime));
 
         var timesRun = 0
         const interval = setInterval(() => {
@@ -119,6 +118,17 @@ const UseRequirementData = (files) => {
             timesRun += 1;
         }, MINUTE_MS);
     };
+
+    const postFiles = async () => {
+        const waitTime = 30000 / files.length ;
+        for (const index in files) {
+            await new Promise(r => setTimeout(r, waitTime));
+            console.log(`index ${index}`);
+            console.log(`begin sending info of file ${index}`);
+            postFile(files[index], index);
+            console.log(`done sending info of file ${index}`);
+        }
+    }
 
     // const testFun = async () => {
     //     const MINUTE_MS = 300;
@@ -132,12 +142,7 @@ const UseRequirementData = (files) => {
 
         // testFun();
 
-        for (const index in files) {
-            console.log(`index ${index}`);
-            console.log(`begin sending info of file ${index}`);
-            postFile(files[index], index);
-            console.log(`done sending info of file ${index}`);
-        }
+        postFiles();
 
     }, [])
 

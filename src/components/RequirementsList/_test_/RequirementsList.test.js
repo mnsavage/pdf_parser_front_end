@@ -515,5 +515,24 @@ describe('RequirementsList', () => {
         expect(element).toBeInTheDocument();
     });
 
+    test('Renders error icon and message on error', () => {
+        render(
+            <RequirementsList 
+                requirementsList={RequirementsListMocks.pdfRequirementsMet} 
+                metConditions={RequirementsListMocks.metConditionsInitial}
+                setMetConditions={jest.fn()}
+                comments={RequirementsListMocks.commentsInitial}
+                setComments={jest.fn()}
+                error={true}
+                disabled={false} 
+                showUnmet={false} 
+            />
+        );
+        const element1 = screen.getByTestId('error-icon');
+        expect(element1).toBeInTheDocument();
+        const element2 = screen.getByText('Error Fetching Requirements');
+        expect(element2).toBeInTheDocument();
+    });
+
 
 })

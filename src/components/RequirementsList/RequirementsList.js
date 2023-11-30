@@ -19,7 +19,6 @@ import './RequirementsList.css';
 const RequirementsList = ({ requirementsList, metConditions, setMetConditions, comments, setComments, error, disabled, showUnmet }) => {
   const [open, setOpen] = useState([]);
   const [openComment, setOpenComment] = useState('');
-  console.log(`rendered with requirementsList: {requirementsList == null}, metConditions: {metConditions == null}, comments: {comments = null}`)
 
   // when a new paper is selected, make sure all comments are closed
   useEffect(() => {
@@ -34,7 +33,7 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
         newOpen.push(value);
     } else {
         newOpen.splice(currentIndex, 1);
-    }
+    };
     setOpen(newOpen);
   };
 
@@ -44,18 +43,18 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
       setOpenComment('');
     } else if (!disabled || comments[value] != '') {
       setOpenComment(value);
-    }
+    };
   };
 
   // when the user checks/ unchecks a box
   const handleCheck = (value) => () => {
-    if (disabled) {return}
+    if (disabled) {return};
     var newCond = [];
     for (var key in metConditions) {
       if (key == value) {
         newCond[key] = (metConditions[value].automated) ? 
           {met: !metConditions[value].met, automated: true, edited: !metConditions[value].edited} :
-          {met: !metConditions[value].met, automated: false, edited: false}
+          {met: !metConditions[value].met, automated: false, edited: false};
       } else {
         newCond[key] = metConditions[key];
       }
@@ -65,18 +64,19 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
 
   // when the user updates a comment
   const updateComment = (condition, value) => {
-    if (disabled) {return}
+    if (disabled) {return};
     var newComments = [];
     for (var key in metConditions) {
       if (key == condition) {
         newComments[key] = value
       } else {
         newComments[key] = comments[key];
-      }
-    }
+      };
+    };
     setComments(newComments);
   };
 
+  // on error display error icon and error message
   if (error) {
     return (
       <div className='loading-div'>
@@ -94,9 +94,10 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
           Error Fetching Requirements
         </Typography>
       </div>
-    )
-  }
+    );
+  };
 
+  // display loading
   if (requirementsList == null || metConditions == null || comments == null) {
     return (
       <div className='loading-div'>
@@ -106,8 +107,8 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
           data-testid = 'loading-spinner'
         />
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <List key='list'>

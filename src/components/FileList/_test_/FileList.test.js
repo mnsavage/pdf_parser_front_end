@@ -30,9 +30,21 @@ describe('FileList', () => {
         expect(handleListItemClick).toHaveBeenCalledWith(1);
     });
 
-    test('Should render loading skeleton when a null name is in list', async () => {
-        render(<FileList selectedIndex={0} names={['file1.pdf', 'file2.pdf', null]} handleListItemClick={jest.fn()}/>);
+    test('Should render loading skeleton when status of a name is loading', async () => {
+        render(<FileList selectedIndex={0} names={['file1.pdf', 'file2.pdf', 'file3.pdf']} status={['success', 'success', 'loading']} handleListItemClick={jest.fn()}/>);
         const loadingCell = screen.queryByTestId('skeleton-list');
+        expect(loadingCell).toBeInTheDocument();
+    });
+
+    test('Should render error icon skeleton when status of a name is error', async () => {
+        render(<FileList selectedIndex={0} names={['file1.pdf', 'file2.pdf', 'file3.pdf']} status={['success', 'success', 'error']} handleListItemClick={jest.fn()}/>);
+        const loadingCell = screen.queryByTestId('error-icon');
+        expect(loadingCell).toBeInTheDocument();
+    });
+
+    test('Should render error icon skeleton when status of a name is api error', async () => {
+        render(<FileList selectedIndex={0} names={['file1.pdf', 'file2.pdf', 'file3.pdf']} status={['success', 'success', 'error']} handleListItemClick={jest.fn()}/>);
+        const loadingCell = screen.queryByTestId('error-icon');
         expect(loadingCell).toBeInTheDocument();
     });
 
