@@ -116,7 +116,7 @@ const UseRequirementData = (files) => {
         const interval = setInterval(() => {
             checkResponse(uuid, index, interval, timesRun);
             timesRun += 1;
-        }, MINUTE_MS);
+        }, waitTime);
     };
 
     const postFiles = async () => {
