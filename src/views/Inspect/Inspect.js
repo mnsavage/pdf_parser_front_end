@@ -20,7 +20,6 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
   // list of fetched requirements for all PDFs
   // if a testingRequirementsList is provided, that is used
   const requirementsList = (testingRequirementsList == null)? UseRequirementData(uploadedFiles) : testingRequirementsList;
-  console.log(`requirementsList outside useeffect: ${requirementsList}`);
 
   // tracks what conditions are met
   const [metConditions, setMetConditions] = useState(
@@ -75,8 +74,6 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
 
   // when the requirements list is updated, call to update metConditions and comments accordingly
   useEffect(() => {
-    console.log(`requirementsList updated:`);
-    console.log(requirementsList)
     // update met conditions
     setMetConditions((oldConditions) => {
       return oldConditions.map((conditon, index) => {
@@ -84,7 +81,6 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
           var metArray = [];
           requirementsList[index]['response']['header'].map((header) => {
             header['requirements'].map((req) => {
-              console.log(`for req: ${req['title']} it is automated: ${req['met'] == null}`)
               metArray[req['title']] = (req['met'] == null) ?
                 {met: false, automated: false, edited: false} :
                 {met: req['met'], automated: true, edited: false}

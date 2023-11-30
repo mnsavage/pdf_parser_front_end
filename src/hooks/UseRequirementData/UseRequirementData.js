@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import jsonData from '../../config.json';
 import PropTypes from 'prop-types';
+import InspectMocks from '../../views/Inspect/_test_/mocks';
 
 const UseRequirementData = (files) => {
     const [requirementsList, setrequirementsList] = useState(files.map(() => {return {status: 'loading', response: null}}));
@@ -12,8 +13,8 @@ const UseRequirementData = (files) => {
         return (uuid == null) ? `${apiDomain}upload/`: `${apiDomain}upload/${uuid}`;
     };
 
+    // update requirement list with new requirements
     const updateRequirementList = (newRequirements, updateIndex) => {
-        console.log('updating requirements list');
         setrequirementsList((oldRequirementList) => {
             return oldRequirementList.map((requirements, index) => {
                 if (index == updateIndex) {
@@ -58,8 +59,6 @@ const UseRequirementData = (files) => {
                 } 
             })
             if (response.status == 200) {
-                console.log('completed');
-                console.log(`uuid: ${response.data.UUID}`);
                 getResponse(response.data.UUID, index);
             } else {
                 updateRequirementList({status: 'api error', response: null}, index);
@@ -72,43 +71,35 @@ const UseRequirementData = (files) => {
 
     // get information from posted files, returns if another call needs to be made
     const getFileInformation = async (uuid, index) => {
-        console.log(`getting info for file with uuid: ${uuid}`);
         try {
             const response = await axios.get(createURL(uuid));
-            console.log(`status: ${response.status}`);
             if (response.status == 200) { // completed
-                console.log('completed');
-                console.log(`output: ${response.data.job_output}`);
                 updateRequirementList({status: 'success', response: JSON.parse(response.data.job_output)}, index);
             } else if (response.status == 202) { // in progress
-                console.log(`uuid ${uuid} in progress`);
-                console.log('getFileInformation return false');
                 return false;
             } else if (response.status == 404) { //error
                 updateRequirementList({status: 'error', response: JSON.parse(response.data.job_output)}, index);
             }
         } catch (error) {
             updateRequirementList({status: 'api error', response: null}, index);
-            console.log(`uuid ${uuid} returned error`);
             console.error('Error getting file data from API:', error.response);
         }
-        console.log('getFileInformation return true');
         return true;
     };
 
+    // Check if the response is compleated
     const checkResponse = async (uuid, index, interval, timesRun) => {
-        console.log(`checking iteration ${timesRun} for uuid :${uuid}`);
             const completed = await getFileInformation(uuid, index);
-            console.log('completed:');
-            console.log(completed);
             if (timesRun > 20 || completed) {
                 clearInterval(interval);
-                console.log(`done getting response for:${uuid}`);
+                if (timesRun > 20) {
+                    updateRequirementList({status: 'api error', response: null}, index);
+                }
             }
     };
 
+    // Do get responses until the response is completed
     const getResponse = async (uuid, index) => {
-        console.log(`getting response for:${uuid}`);
         const waitTime = 30000;
         await new Promise(r => setTimeout(r, waitTime));
 
@@ -119,31 +110,36 @@ const UseRequirementData = (files) => {
         }, waitTime);
     };
 
+    // send post for all files
     const postFiles = async () => {
         const waitTime = 30000 / files.length ;
         for (const index in files) {
             await new Promise(r => setTimeout(r, waitTime));
-            console.log(`index ${index}`);
-            console.log(`begin sending info of file ${index}`);
             postFile(files[index], index);
-            console.log(`done sending info of file ${index}`);
         }
     }
 
-    // const testFun = async () => {
-    //     const MINUTE_MS = 300;
-    //     await new Promise(r => setTimeout(r, MINUTE_MS));
-    //     updateRequirementList({status: 'error', response:null}, 0);
+    // used for testing/ mocking call. Should delete before final revision
+    const testFunction = async () => {
+        const MINUTE_MS = 300;
+        await new Promise(r => setTimeout(r, 300));
+        updateRequirementList(InspectMocks.requirementsList[0], 0);
+        await new Promise(r => setTimeout(r, 150));
+        updateRequirementList(InspectMocks.requirementsList[1], 1);
+        await new Promise(r => setTimeout(r, 70));
+        updateRequirementList(InspectMocks.requirementsList[2], 2);
+        await new Promise(r => setTimeout(r, 30));
+        updateRequirementList(InspectMocks.requirementsList[3], 3);
+        await new Promise(r => setTimeout(r, 20));
+        updateRequirementList(InspectMocks.requirementsList[4], 4);
+        await new Promise(r => setTimeout(r, 10));
+        updateRequirementList(InspectMocks.requirementsList[5], 5);
 
-    // };
+    };
 
     useEffect(() => {
-        console.log('this is run');
-
         // testFun();
-
         postFiles();
-
     }, [])
 
     return requirementsList;

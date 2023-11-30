@@ -216,6 +216,7 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
                         <TextField
                           key={`CommentTextArea-${req['title']}`}
                           className='comment-text-area'
+                          id={`CommentTextArea-${req['title']}`}
                           disabled={disabled}
                           label="Comment"
                           placeholder="Add comment here"
