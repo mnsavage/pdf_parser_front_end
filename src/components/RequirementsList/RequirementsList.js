@@ -16,14 +16,14 @@ import CircularProgress from '@mui/material/CircularProgress'
 import PropTypes from 'prop-types';
 import './RequirementsList.css';
 
-const RequirementsList = ({ requirementsList, metConditions, setMetConditions, comments, setComments, error, disabled, showUnmet }) => {
+const RequirementsList = ({ requirementsList, metConditions, setMetConditions, comments, setComments, error, disabled, filterFunction }) => {
   const [open, setOpen] = useState([]);
   const [openComment, setOpenComment] = useState('');
 
-  // when a new paper is selected, make sure all comments are closed
+  // when a new paper is selected or edited/ done editing, make sure all comments are closed
   useEffect(() => {
     setOpenComment('')
-  }, [requirementsList]);
+  }, [requirementsList, disabled]);
 
   // when the user opens/ closes the drop down
   const handleOpen = (value) => () => {
@@ -146,7 +146,7 @@ const RequirementsList = ({ requirementsList, metConditions, setMetConditions, c
               unmountOnExit
             >
               <List key={`Lists-${value['title']}`}>
-                {value['requirements'].filter(value => !showUnmet || metConditions[value['title']]['met'] ).map((req => {
+                {value['requirements'].filter(value => filterFunction(value, metConditions)).map((req => {
                   return (
                     <>
                     <ListItem
@@ -250,7 +250,7 @@ RequirementsList.propTypes = {
     setComments: PropTypes.func.isRequired,
     error: PropTypes.bool.isRequired,
     disabled: PropTypes.bool.isRequired,
-    showUnmet: PropTypes.bool.isRequired,
+    filterFunction: PropTypes.func.isRequired,
 };
 
 export default RequirementsList;

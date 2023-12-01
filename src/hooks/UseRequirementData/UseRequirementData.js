@@ -119,26 +119,7 @@ const UseRequirementData = (files) => {
         }
     }
 
-    // used for testing/ mocking call. Should delete before final revision
-    const testFunction = async () => {
-        const MINUTE_MS = 300;
-        await new Promise(r => setTimeout(r, 300));
-        updateRequirementList(InspectMocks.requirementsList[0], 0);
-        await new Promise(r => setTimeout(r, 150));
-        updateRequirementList(InspectMocks.requirementsList[1], 1);
-        await new Promise(r => setTimeout(r, 70));
-        updateRequirementList(InspectMocks.requirementsList[2], 2);
-        await new Promise(r => setTimeout(r, 30));
-        updateRequirementList(InspectMocks.requirementsList[3], 3);
-        await new Promise(r => setTimeout(r, 20));
-        updateRequirementList(InspectMocks.requirementsList[4], 4);
-        await new Promise(r => setTimeout(r, 10));
-        updateRequirementList(InspectMocks.requirementsList[5], 5);
-
-    };
-
     useEffect(() => {
-        // testFun();
         postFiles();
     }, [])
 

@@ -96,9 +96,9 @@ describe('Inspect', () => {
         expect(element2).toBeInTheDocument();
     });
 
-    test('Should render show unmet conditions toggle', () => {
+    test('Should render options button', () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}, {name: 'file4.pdf'}, {name: 'file5.pdf'}, {name: 'file6.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
-        const element1 = screen.getByText('Show only unmet conditons');
+        const element1 = screen.getByTestId('settings-button');
         expect(element1).toBeInTheDocument();
     });
 
@@ -117,15 +117,122 @@ describe('Inspect', () => {
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
     });
 
-    test('Selecting the show unmet conditions toggle only shows unmet conditions', async () => {
+    test('Selecting the show only unmet requirements toggle only shows unmet conditions', async () => {
         render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}, {name: 'file4.pdf'}, {name: 'file5.pdf'}, {name: 'file6.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
-        const button1 = screen.getByText('Show only unmet conditons');
+
+        await act(() => {
+            userEvent.click(screen.getByTestId('settings-button'));
+        });
+
+        await waitFor(() =>  expect(screen.queryByText('Show only unmet requirements')).toBeInTheDocument());
+
+        const button1 = screen.getByText('Show only unmet requirements');
         await act(() => {
             userEvent.click(button1);
         });
         await waitFor(() =>  expect(screen.queryByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs')).toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('No Blank pages in the documents')).not.toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('2 double spaces beneath title')).toBeInTheDocument());
+    });
+
+    test('Selecting the show only met requirements toggle only shows unmet conditions', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}, {name: 'file4.pdf'}, {name: 'file5.pdf'}, {name: 'file6.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
+
+        await act(() => {
+            userEvent.click(screen.getByTestId('settings-button'));
+        });
+
+        await waitFor(() =>  expect(screen.queryByText('Show only unmet requirements')).toBeInTheDocument());
+
+        const button1 = screen.getByText('Show only met requirements');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('No Blank pages in the documents')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('2 double spaces beneath title')).not.toBeInTheDocument());
+    });
+
+    test('Selecting the show only automated requirements toggle only shows unmet conditions', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}, {name: 'file4.pdf'}, {name: 'file5.pdf'}, {name: 'file6.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
+
+        await act(() => {
+            userEvent.click(screen.getByTestId('settings-button'));
+        });
+
+        await waitFor(() =>  expect(screen.queryByText('Show only unmet requirements')).toBeInTheDocument());
+
+        const button1 = screen.getByText('Show only automated requirements');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('No Blank pages in the documents')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('2 double spaces beneath title')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('requirement none')).not.toBeInTheDocument());
+    });
+
+    test('Selecting the show only not automated requirements toggle only shows unmet conditions', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}, {name: 'file4.pdf'}, {name: 'file5.pdf'}, {name: 'file6.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
+
+        await act(() => {
+            userEvent.click(screen.getByTestId('settings-button'));
+        });
+
+        await waitFor(() =>  expect(screen.queryByText('Show only unmet requirements')).toBeInTheDocument());
+
+        const button1 = screen.getByText('Show only not automated requirements');
+        await act(() => {
+            userEvent.click(button1);
+        });
+        await waitFor(() =>  expect(screen.queryByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('No Blank pages in the documents')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('2 double spaces beneath title')).not.toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('requirement none')).toBeInTheDocument());
+    });
+
+    test('Selecting the reset automated conditions to original button brings up an alert', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}, {name: 'file4.pdf'}, {name: 'file5.pdf'}, {name: 'file6.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
+
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+
+        await act(() => {
+            userEvent.click(screen.getByTestId('settings-button'));
+        });
+
+        await waitFor(() =>  expect(screen.queryByText('Show only unmet requirements')).toBeInTheDocument());
+
+        const button2 = screen.getByText('Reset automated conditions to original');
+        await act(() => {
+            userEvent.click(button2);
+        });
+        await waitFor(() =>  expect(screen.queryByText('Discard changes?')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('Continue to reset automated conditions to their original.')).toBeInTheDocument());
+    });
+
+    test('Selecting the clear all comments button brings up an alert', async () => {
+        render(<Inspect setPage={jest.fn()} uploadedFiles={[{name: 'file1.pdf'}, {name: 'file2.pdf'}, {name: 'file3.pdf'}, {name: 'file4.pdf'}, {name: 'file5.pdf'}, {name: 'file6.pdf'}]} setUploadedFiles={jest.fn()} testingRequirementsList={InspectMocks.requirementsList} />);
+
+        const button1 = screen.getByText('Edit/ View Selected File');
+        await act(() => {
+            userEvent.click(button1);
+        });
+
+        await act(() => {
+            userEvent.click(screen.getByTestId('settings-button'));
+        });
+
+        await waitFor(() =>  expect(screen.queryByText('Show only unmet requirements')).toBeInTheDocument());
+
+        const button2 = screen.getByText('Clear all comments');
+        await act(() => {
+            userEvent.click(button2);
+        });
+        await waitFor(() =>  expect(screen.queryByText('Discard changes?')).toBeInTheDocument());
+        await waitFor(() =>  expect(screen.queryByText('Continue to delete all comments in this file.')).toBeInTheDocument());
     });
 
     test('Should not show file list when editing a file', async () => {
@@ -146,7 +253,6 @@ describe('Inspect', () => {
         await waitFor(() =>  expect(screen.queryByText('Edit/ View Selected File')).not.toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('Download Summaries')).not.toBeInTheDocument());
         await waitFor(() =>  expect(screen.queryByText('Continue')).toBeInTheDocument());
-        await waitFor(() =>  expect(screen.queryByText('Reset All Conditions')).toBeInTheDocument());
     });
 
     test('Does not render alert when continue is pressed when editing a file if no edits are made', async () => {
@@ -380,10 +486,21 @@ describe('Inspect', () => {
             userEvent.click(buttons[0]);
         });
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(1));
-        const button3 = screen.getByText('Reset All Conditions');
         await act(() => {
-            userEvent.click(button3);
+            userEvent.click(screen.getByTestId('settings-button'));
         });
+
+        await waitFor(() =>  expect(screen.queryByText('Show only unmet requirements')).toBeInTheDocument());
+
+        const button2 = screen.getByText('Reset automated conditions to original');
+        await act(() => {
+            userEvent.click(button2);
+        });
+
+        await act(() => {
+            userEvent.click(screen.queryAllByText('Continue')[1]);
+        });
+
         await waitFor(() =>  expect(screen.queryAllByText('edited').length).toBe(0));
     });
 
@@ -399,9 +516,20 @@ describe('Inspect', () => {
             userEvent.click(buttons[0]);
         });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(1));
-        const button3 = screen.getByText('Reset All Conditions');
+
         await act(() => {
-            userEvent.click(button3);
+            userEvent.click(screen.getByTestId('settings-button'));
+        });
+
+        await waitFor(() =>  expect(screen.queryByText('Show only unmet requirements')).toBeInTheDocument());
+
+        const button2 = screen.getByText('Reset automated conditions to original');
+        await act(() => {
+            userEvent.click(button2);
+        });
+
+        await act(() => {
+            userEvent.click(screen.queryAllByText('Continue')[1]);
         });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(2));
     });
@@ -644,10 +772,22 @@ describe('Inspect', () => {
             userEvent.click(buttons[3]);
         });
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(3));
-        const button3 = screen.getByText('Reset All Conditions');
+
         await act(() => {
-            userEvent.click(button3);
+            userEvent.click(screen.getByTestId('settings-button'));
         });
+
+        await waitFor(() =>  expect(screen.queryByText('Show only unmet requirements')).toBeInTheDocument());
+
+        const button2 = screen.getByText('Reset automated conditions to original');
+        await act(() => {
+            userEvent.click(button2);
+        });
+
+        await act(() => {
+            userEvent.click(screen.queryAllByText('Continue')[1]);
+        });
+
         await waitFor(() =>  expect(screen.getAllByTestId('CheckBoxIcon').length).toBe(3));
     });
 

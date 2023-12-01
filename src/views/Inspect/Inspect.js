@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button'
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import pageOption from '../../utils/pageOption';
 import UnderlineHeader from '../../components/UnderlineHeader/UnderlineHeader';
@@ -12,7 +10,8 @@ import Alert from '../../components/Alert/Alert';
 import CreateSummary from './CreateSummary/CreateSummary';
 import PropTypes from 'prop-types';
 import RequirementsList from '../../components/RequirementsList/RequirementsList';
-import UseRequirementData from '../../hooks/UseRequirementData/UseRequirementData'
+import UseRequirementData from '../../hooks/UseRequirementData/UseRequirementData';
+import OptionDropdown from '../../components/OptionDropdown/OptionDropdown';
 import './Inspect.css';
 
 const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirementsList }) => {
@@ -67,10 +66,12 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
   const [selectedMetConditions, setSelectedMetConditions] = useState(metConditions[selectedIndex]);
   const [selectedComments, setSelectedComments] = useState(comments[selectedIndex]);
   const [editing, setEditing] = useState(false);
-  const [showUnmet, setShowUnmet] = useState(false);
   const [url, setUrl] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
   const [editAlertOpen, setEditAlertOpen] = useState(false);
+  const [filterFunction, setFilterFunction] = useState(() => (value, metConditions) => {return value});
+  const [resetConditionsAlertOpen, setResetConditionsAlertOpen] = useState(false);
+  const [resetCommentsAlertOpen, setResetCommentsAlertOpen] = useState(false);
 
   // when the requirements list is updated, call to update metConditions and comments accordingly
   useEffect(() => {
@@ -171,8 +172,14 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     setSelectedMetConditions(newCond);
   };
 
-  const handleUnmetSwitch = () => {
-    setShowUnmet(!showUnmet);   
+  const handleResetComments = () => {
+    // create new comment array reseting edited elements
+    // there is no way to do this with map since it is an object
+    var newComments = [];
+    for (var key in selectedComments) {
+      newComments[key] = '';
+    };
+    setSelectedComments(newComments);
   };
 
   const handleListItemClick = (index) => {
@@ -206,6 +213,30 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
           setEditAlertOpen(false)
         }}
       />
+      <Alert 
+        isOpen={resetConditionsAlertOpen} 
+        title='Discard changes?' 
+        desc='Continue to reset automated conditions to their original.' 
+        continueAction={() => {
+          setResetConditionsAlertOpen(false);
+          handleResetCondiditons();
+        }} 
+        backAction={() => {
+          setResetConditionsAlertOpen(false)
+        }}
+      />
+      <Alert 
+        isOpen={resetCommentsAlertOpen} 
+        title='Discard changes?' 
+        desc='Continue to delete all comments in this file.' 
+        continueAction={() => {
+          setResetCommentsAlertOpen(false);
+          handleResetComments();
+        }} 
+        backAction={() => {
+          setResetCommentsAlertOpen(false)
+        }}
+      />
       <div className='inspect-page-container'>
         {editing ? (
           <embed
@@ -234,7 +265,12 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
               ) : (
                 <Typography variant='body3' className='automated-label-outlined'>* Automated requirements are outlined</Typography>
               )}
-              <FormControlLabel control={<Switch onChange={handleUnmetSwitch} />} label='Show only unmet conditons' className='switch' />
+              <OptionDropdown 
+                setFilterFunction={setFilterFunction}
+                setResetConditionsAlertOpen={setResetConditionsAlertOpen}
+                setResetCommentsAlertOpen={setResetCommentsAlertOpen}
+                disabled={!editing}
+              />
             </>
           ) : (<div />)
           }
@@ -247,7 +283,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
               setComments={setSelectedComments}
               error={requirementsList[selectedIndex]['status'] == 'api error'} 
               disabled={!editing} 
-              showUnmet={showUnmet} 
+              filterFunction={filterFunction} 
             />
           </div>
         </div>
@@ -256,16 +292,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
         className='button-box'
       >
       {editing ? (
-        <div className='back-button-container'>
-              <Button
-                variant='contained'
-                className='secondary-button'
-                color='secondary'
-                onClick={handleResetCondiditons}
-              >
-                Reset All Conditions
-              </Button>
-            </div>
+        <div />
         ) : (
           <>
             <div className='back-button-container'>
