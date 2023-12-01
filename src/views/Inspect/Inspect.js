@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button'
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
+import Typography from '@mui/material/Typography';
 import pageOption from '../../utils/pageOption';
 import UnderlineHeader from '../../components/UnderlineHeader/UnderlineHeader';
 import FileList from '../../components/FileList/FileList';
@@ -11,55 +10,124 @@ import Alert from '../../components/Alert/Alert';
 import CreateSummary from './CreateSummary/CreateSummary';
 import PropTypes from 'prop-types';
 import RequirementsList from '../../components/RequirementsList/RequirementsList';
+import UseRequirementData from '../../hooks/UseRequirementData/UseRequirementData';
+import OptionDropdown from '../../components/OptionDropdown/OptionDropdown';
 import './Inspect.css';
 
-const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList }) => {
+const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirementsList }) => {
+
+  // list of fetched requirements for all PDFs
+  // if a testingRequirementsList is provided, that is used
+  const requirementsList = (testingRequirementsList == null)? UseRequirementData(uploadedFiles) : testingRequirementsList;
+
+  // tracks what conditions are met
   const [metConditions, setMetConditions] = useState(
-    requirementsList.map((file) => {
-      var metArray = [];
-      file.header.map((header) => {
-        header.requirements.map((req) => {
-          metArray[req.title] = {met: req.met, edited: false};
-        })
+    (testingRequirementsList == null)? (
+      uploadedFiles.map(() => null)
+    ) : (
+      requirementsList.map((file) => {
+        if (file['response'] == null) {
+          return null;
+        };
+        var metArray = [];
+        file['response']['header'].map((header) => {
+          header['requirements'].map((req) => {
+            metArray[req['title']] = (req.met == null) ?
+              {met: false, automated: false, edited: false} :
+              {met: req['met'], automated: true, edited: false};
+          })
+        });
+        return metArray;
       })
-      return metArray;
-    })
+    )
   );
+
+  // tracks comments
   const [comments, setComments] = useState(
-    requirementsList.map((file) => {
-      var commentsArray = [];
-      file.header.map((header) => {
-        header.requirements.map((req) => {
-          commentsArray[req.title] = '';
+    (testingRequirementsList == null)? (
+      uploadedFiles.map(() => null)
+    ) : (
+      requirementsList.map((file) => {
+        if (file['response'] == null) {
+          return null;
+        }
+        var commentsArray = [];
+        file['response']['header'].map((header) => {
+          header['requirements'].map((req) => {
+            commentsArray[req['title']] = '';
+          })
         })
+        return commentsArray;
       })
-      return commentsArray;
-    })
+    )
   );
+
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedMetConditions, setSelectedMetConditions] = useState(metConditions[selectedIndex]);
   const [selectedComments, setSelectedComments] = useState(comments[selectedIndex]);
   const [editing, setEditing] = useState(false);
-  const [showUnmet, setShowUnmet] = useState(false);
   const [url, setUrl] = useState('');
   const [alertOpen, setAlertOpen] = useState(false);
   const [editAlertOpen, setEditAlertOpen] = useState(false);
+  const [filterFunction, setFilterFunction] = useState(() => (value, metConditions) => {return value});
+  const [resetConditionsAlertOpen, setResetConditionsAlertOpen] = useState(false);
+  const [resetCommentsAlertOpen, setResetCommentsAlertOpen] = useState(false);
 
+  // when the requirements list is updated, call to update metConditions and comments accordingly
+  useEffect(() => {
+    // update met conditions
+    setMetConditions((oldConditions) => {
+      return oldConditions.map((conditon, index) => {
+        if (requirementsList[index]['response'] != null && conditon == null) {
+          var metArray = [];
+          requirementsList[index]['response']['header'].map((header) => {
+            header['requirements'].map((req) => {
+              metArray[req['title']] = (req['met'] == null) ?
+                {met: false, automated: false, edited: false} :
+                {met: req['met'], automated: true, edited: false}
+            })
+          })
+          return metArray;
+        } else {
+          return conditon;
+        }
+      });
+    });
+
+    // update comments
+    setComments((oldComments) => {
+      return oldComments.map((comment, index) => {
+        if (requirementsList[index]['response'] != null && comment == null) {
+          var commentsArray = [];
+          requirementsList[index]['response']['header'].map((header) => {
+            header['requirements'].map((req) => {
+              commentsArray[req['title']] = '';
+            })
+          })
+          return commentsArray;
+        } else {
+          return comment;
+        }
+      });
+    });
+  }, [requirementsList]);
+
+  // set selected metConditions and comments when they are updated
   useEffect(() => {
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
     setSelectedMetConditions(metConditions[selectedIndex]);
-    setSelectedComments(comments[selectedIndex])
-  }, [selectedIndex]);
+    setSelectedComments(comments[selectedIndex]);
+  }, [selectedIndex, metConditions, comments]);
 
   // Check if any edits were made
   const checkEdits = () => {
     for (var key in selectedMetConditions) {
       if (selectedMetConditions[key].met != metConditions[selectedIndex][key].met) {
         return false;
-      }
+      };
       if (selectedComments[key] != comments[selectedIndex][key]) {
         return false;
-      }
+      };
     }
     return true;  
   };
@@ -73,8 +141,8 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
           return selectedMetConditions;
         } else {
           return conditon;
-        }
-      })
+        };
+      });
       setMetConditions(newConditions);
 
       // update met comments
@@ -83,8 +151,8 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
           return selectedComments;
         } else {
           return comment;
-        }
-      })
+        };
+      });
       setComments(newComments);
     }
     setEditing(!editing);   
@@ -96,16 +164,22 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
     var newCond = [];
     for (var key in selectedMetConditions) {
       if (selectedMetConditions[key].edited) {
-        newCond[key] = {met: !selectedMetConditions[key].met, edited: false};
+        newCond[key] = {met: !selectedMetConditions[key].met, automated: true, edited: false};
       } else {
         newCond[key] = selectedMetConditions[key];
-      }
-    }
+      };
+    };
     setSelectedMetConditions(newCond);
   };
 
-  const handleUnmetSwitch = () => {
-    setShowUnmet(!showUnmet);   
+  const handleResetComments = () => {
+    // create new comment array reseting edited elements
+    // there is no way to do this with map since it is an object
+    var newComments = [];
+    for (var key in selectedComments) {
+      newComments[key] = '';
+    };
+    setSelectedComments(newComments);
   };
 
   const handleListItemClick = (index) => {
@@ -139,6 +213,30 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
           setEditAlertOpen(false)
         }}
       />
+      <Alert 
+        isOpen={resetConditionsAlertOpen} 
+        title='Discard changes?' 
+        desc='Continue to reset automated conditions to their original.' 
+        continueAction={() => {
+          setResetConditionsAlertOpen(false);
+          handleResetCondiditons();
+        }} 
+        backAction={() => {
+          setResetConditionsAlertOpen(false)
+        }}
+      />
+      <Alert 
+        isOpen={resetCommentsAlertOpen} 
+        title='Discard changes?' 
+        desc='Continue to delete all comments in this file.' 
+        continueAction={() => {
+          setResetCommentsAlertOpen(false);
+          handleResetComments();
+        }} 
+        backAction={() => {
+          setResetCommentsAlertOpen(false)
+        }}
+      />
       <div className='inspect-page-container'>
         {editing ? (
           <embed
@@ -149,22 +247,43 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
           <div className='left-container'>
             <UnderlineHeader title='Uploaded Files' />
             <div className='confirm-list-container'>
-              <FileList selectedIndex={selectedIndex} files={uploadedFiles} handleListItemClick={handleListItemClick} />
+              <FileList
+                selectedIndex={selectedIndex}
+                names={requirementsList.map((element, index) => (element['response'] == null || element['response']['newName'] == null) ? uploadedFiles[index].name : element['response']['newName'])} 
+                status={requirementsList.map((element) => element['status'])}
+                handleListItemClick={handleListItemClick}
+              />
             </div>
           </div>
         )}
         <div className='vl'></div>
         <div className='right-list-container'>
-          <FormControlLabel control={<Switch onChange={handleUnmetSwitch} />} label='Show only unmet conditons' className='switch' />
+          {(requirementsList[selectedIndex]['response'] != null) ? (
+            <>
+              {(requirementsList[selectedIndex]['status'] == 'error') ? (
+                <Typography variant='body3' className='automated-label'>* Requirements were unable to be automated</Typography>
+              ) : (
+                <Typography variant='body3' className='automated-label-outlined'>* Automated requirements are outlined</Typography>
+              )}
+              <OptionDropdown 
+                setFilterFunction={setFilterFunction}
+                setResetConditionsAlertOpen={setResetConditionsAlertOpen}
+                setResetCommentsAlertOpen={setResetCommentsAlertOpen}
+                disabled={!editing}
+              />
+            </>
+          ) : (<div />)
+          }
           <div className='requirements-list-container'>
             <RequirementsList 
-              requirementsList={requirementsList[selectedIndex].header} 
+              requirementsList={(requirementsList[selectedIndex]['response'] == null) ? null : requirementsList[selectedIndex]['response']['header']} 
               metConditions={selectedMetConditions} 
               setMetConditions={setSelectedMetConditions}
               comments={selectedComments} 
-              setComments={setSelectedComments} 
+              setComments={setSelectedComments}
+              error={requirementsList[selectedIndex]['status'] == 'api error'} 
               disabled={!editing} 
-              showUnmet={showUnmet} 
+              filterFunction={filterFunction} 
             />
           </div>
         </div>
@@ -173,16 +292,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
         className='button-box'
       >
       {editing ? (
-        <div className='back-button-container'>
-              <Button
-                variant='contained'
-                className='secondary-button'
-                color='secondary'
-                onClick={handleResetCondiditons}
-              >
-                Reset All Conditions
-              </Button>
-            </div>
+        <div />
         ) : (
           <>
             <div className='back-button-container'>
@@ -213,11 +323,11 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, requirementsList })
               setEditing(false);
             } else {
               setEditAlertOpen(true);
-            }
+            };
           } else {
             setAlertOpen(true);
           }
-          }} 
+          }}
         />
       </Box>
     </>
@@ -228,7 +338,7 @@ Inspect.propTypes = {
   setPage: PropTypes.func.isRequired,
   uploadedFiles: PropTypes.array.isRequired,
   setUploadedFiles: PropTypes.func.isRequired,
-  requirementsList: PropTypes.array.isRequired
+  testingRequirementsList: PropTypes.array
 };
 
 export default Inspect;

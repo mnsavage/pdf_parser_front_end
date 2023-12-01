@@ -26,28 +26,34 @@ const RequirementsListMocks = {
     metConditionsInitial: {
         'Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs': {
             met: true,
+            automatic: true,
             edited: false
         },
         'No Blank pages in the documents': {
             met: false,
+            automatic: true,
             edited: false
         },
         '2 double spaces beneath title': {
             met: true,
+            automatic: true,
             edited: false
         }
     },
     metConditionsEdited: {
         'Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs': {
             met: false,
+            automatic: true,
             edited: true
         },
         'No Blank pages in the documents': {
             met: true,
+            automatic: true,
             edited: true
         },
         '2 double spaces beneath title': {
             met: true,
+            automatic: true,
             edited: false
         }
     },

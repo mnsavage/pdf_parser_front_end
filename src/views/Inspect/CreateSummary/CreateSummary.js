@@ -26,18 +26,18 @@ const CreateSummary = (requirementsList, metConditions, comments) => {
                       style: 'tableHead',
                       children: [
                           new TextRun({
-                              text: headerData.title,
+                              text: headerData['title'],
                               bold: true,
                           }),
                       ],
                   }),
-                  ].concat(headerData.requirements.map((requirement) => {
+                  ].concat(headerData['requirements'].map((requirement) => {
                     return new Paragraph({
                         style: 'tableBody',
                         children: [
-                            new CheckBox({ checked: metConditions[index][requirement.title].met }),
+                            new CheckBox({ checked: metConditions[index][requirement['title']]['met'] }),
                             new TextRun({
-                                text: `  ${requirement.title}`,
+                                text: `  ${requirement['title']}`,
                             }),
                         ],
                     });
@@ -58,14 +58,14 @@ const CreateSummary = (requirementsList, metConditions, comments) => {
                             }),
                         ],
                     }),
-                    ].concat(headerData.requirements
+                    ].concat(headerData['requirements']
                         .filter((requirement) => {
-                            return comments[index][requirement.title] !== ''
+                            return comments[index][requirement['title']] !== ''
                         })
                         .map((requirement) => {
                         return new Paragraph({
                             style: 'tableBody',
-                            text: `${comments[index][requirement.title]}`,
+                            text: `${comments[index][requirement['title']]}`,
                             bullet: {
                                 level: 0
                             }
@@ -78,7 +78,7 @@ const CreateSummary = (requirementsList, metConditions, comments) => {
 
     const createDoc = (file, index) => {
         const doc = new Document({
-            title: file.newName,
+            title: file['newName'],
             styles: {
                 paragraphStyles: [
                     {
@@ -195,7 +195,7 @@ const CreateSummary = (requirementsList, metConditions, comments) => {
                                                     bold: true,
                                                 }),
                                                 new TextRun({
-                                                    text: `${file.fname} ${file.lname}`,
+                                                    text: `${file['fname']} ${file['lname']}`,
                                                 }),
                                             ],
                                         }),
@@ -222,7 +222,7 @@ const CreateSummary = (requirementsList, metConditions, comments) => {
                                         }),
                                   ],
                               }),
-                            ].concat(file.header.map((header) => createRow(header, index))),
+                            ].concat(file['header'].map((header) => createRow(header, index))),
                         }),
                     ],
                 },
@@ -232,12 +232,14 @@ const CreateSummary = (requirementsList, metConditions, comments) => {
         // Used to export the file into a .docx file
         Packer.toBlob(doc).then((blob) => {
           // saveAs from FileSaver will download the file
-          saveAs(blob, `${file.newName}.docx`);
+          saveAs(blob, `${file['newName']}.docx`);
       });
     }
 
     requirementsList.map((file, index) => {
-        createDoc(file, index);
+        if (file['response'] !== null) {
+            createDoc(file['response'], index);
+        }
     })
 
 };

@@ -2,3 +2,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.skeleton-list {
+    width: 100%;
+}
+
+.skeleton {
+    width: 95%;
+}
+
+.error-text {
+    padding-left: 10px;
+}

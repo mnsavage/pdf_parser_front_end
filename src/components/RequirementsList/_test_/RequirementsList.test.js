@@ -14,8 +14,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}} 
             />
         );
         const element1 = screen.getByText('Page Formatting & Font');
@@ -32,8 +33,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}
             />
         );
         const element1 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
@@ -52,11 +54,12 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}
             />
         );
-        const commentButtons = screen.getAllByTestId('comment-button')
+        const commentButtons = screen.getAllByTestId('comment-button');
         expect(commentButtons.length).toBe(3);
     });
 
@@ -68,12 +71,13 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}} 
             />
         );
         expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
-        const commentButtons = screen.getAllByTestId('comment-button')
+        const commentButtons = screen.getAllByTestId('comment-button');
         await act(() => {
             userEvent.click(commentButtons[0]);
         });
@@ -88,8 +92,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}
             />
         );
         expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
@@ -103,8 +108,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={true} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}} 
             />
         );
         expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
@@ -123,8 +129,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={jest.fn()}
+                error={false}
                 disabled={true} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}
             />
         );
         expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
@@ -143,8 +150,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={jest.fn()}
+                error={false}
                 disabled={true} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}
             />
         );
         expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
@@ -163,8 +171,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}
             />
         );
         expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
@@ -183,8 +192,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}
             />
         );
         expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
@@ -203,8 +213,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}
             />
         );
         expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
@@ -227,8 +238,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}} 
             />
         );
         expect(screen.queryByLabelText('Comment')).not.toBeInTheDocument();
@@ -252,8 +264,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={setComments}
+                error={false}
                 disabled={true} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}} 
             />
         );
         const commentButtons = screen.getAllByTestId('comment-button')
@@ -277,8 +290,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={setComments}
+                error={false}
                 disabled={true} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}} 
             />
         );
         const commentButtons = screen.getAllByTestId('comment-button')
@@ -302,8 +316,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsEdited}
                 setComments={setComments}
+                error={false}
                 disabled={true} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}  
             />
         );
         const commentButtons = screen.getAllByTestId('comment-button')
@@ -326,8 +341,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}} 
             />
         );
         const textElement1 = 'Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs';
@@ -355,8 +371,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}  
             />
         );
         const elements = screen.getAllByTestId('CheckBoxIcon');
@@ -372,8 +389,9 @@ describe('RequirementsList', () => {
                 setMetConditions={setMetConditions}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}  
             />
         );
         const buttons = screen.getAllByTestId('checkbox');
@@ -392,8 +410,9 @@ describe('RequirementsList', () => {
                 setMetConditions={setMetConditions}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={true} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}} 
             />
         );
         const buttons = screen.getAllByTestId('checkbox');
@@ -403,7 +422,7 @@ describe('RequirementsList', () => {
         expect(setMetConditions).not.toHaveBeenCalled();
     });
 
-    test('When showUnmet is true, only unmet conditions are shown', () => {
+    test('Should filter conditions based on the filterFunction', () => {
         render(
             <RequirementsList 
                 requirementsList={RequirementsListMocks.pdfRequirementsMet} 
@@ -411,8 +430,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={true} 
+                filterFunction={(value, metConditions) => {return (metConditions[value['title']]['met'])}}  
             />
         );
         const element1 = screen.queryByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
@@ -431,8 +451,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}} 
             />
         );
         const element1 = screen.getByText('Font: Use a standard 12-point font consistently throughout the document, including headings and subheadings, and must be black font including URLs');
@@ -451,8 +472,9 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}  
             />
         );
         const element = screen.queryAllByText('edited');
@@ -467,12 +489,49 @@ describe('RequirementsList', () => {
                 setMetConditions={jest.fn()}
                 comments={RequirementsListMocks.commentsInitial}
                 setComments={jest.fn()}
+                error={false}
                 disabled={false} 
-                showUnmet={false} 
+                filterFunction={() => (value, metConditions) => {return value}}   
             />
         );
         const element = screen.queryAllByText('edited');
         expect(element.length).toBe(2);
+    });
+
+    test('Should show loading symbol when supplied null', () => {
+        render(
+            <RequirementsList 
+                requirementsList={null} 
+                metConditions={null}
+                setMetConditions={jest.fn()}
+                comments={null}
+                setComments={jest.fn()}
+                error={false}
+                disabled={false} 
+                filterFunction={() => (value, metConditions) => {return value}}  
+            />
+        );
+        const element = screen.queryByTestId('loading-spinner');
+        expect(element).toBeInTheDocument();
+    });
+
+    test('Renders error icon and message on error', () => {
+        render(
+            <RequirementsList 
+                requirementsList={RequirementsListMocks.pdfRequirementsMet} 
+                metConditions={RequirementsListMocks.metConditionsInitial}
+                setMetConditions={jest.fn()}
+                comments={RequirementsListMocks.commentsInitial}
+                setComments={jest.fn()}
+                error={true}
+                disabled={false} 
+                filterFunction={() => (value, metConditions) => {return value}}  
+            />
+        );
+        const element1 = screen.getByTestId('error-icon');
+        expect(element1).toBeInTheDocument();
+        const element2 = screen.getByText('Error Fetching Requirements');
+        expect(element2).toBeInTheDocument();
     });
 
 
