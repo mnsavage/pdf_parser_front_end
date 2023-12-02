@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import jsonData from '../../config.json';
 import PropTypes from 'prop-types';
-import InspectMocks from '../../views/Inspect/_test_/mocks';
 
 const UseRequirementData = (files) => {
     const [requirementsList, setrequirementsList] = useState(files.map(() => {return {status: 'loading', response: null}}));

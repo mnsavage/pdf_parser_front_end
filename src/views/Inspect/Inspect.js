@@ -87,7 +87,12 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
                 {met: req['met'], automated: true, edited: false}
             })
           })
+          if (index == selectedIndex) {
+            setSelectedMetConditions(metArray);
+          }
           return metArray;
+        } else if (index == selectedIndex) {
+          return selectedMetConditions;
         } else {
           return conditon;
         }
@@ -104,7 +109,12 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
               commentsArray[req['title']] = '';
             })
           })
+          if (index == selectedIndex) {
+            setSelectedComments(commentsArray);
+          }
           return commentsArray;
+        } else if (index == selectedIndex) {
+          return selectedComments;
         } else {
           return comment;
         }
@@ -117,7 +127,7 @@ const Inspect = ({ setPage, uploadedFiles, setUploadedFiles, testingRequirements
     setUrl(URL.createObjectURL(uploadedFiles[selectedIndex]));
     setSelectedMetConditions(metConditions[selectedIndex]);
     setSelectedComments(comments[selectedIndex]);
-  }, [selectedIndex, metConditions, comments]);
+  }, [selectedIndex]);
 
   // Check if any edits were made
   const checkEdits = () => {
