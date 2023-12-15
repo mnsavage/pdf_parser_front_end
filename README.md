@@ -1,6 +1,9 @@
 # pdf_parser_front_end
 This repository contains our front-end code which build using react
 
+## github actions:
+- In this repository, a GitHub Action is triggered whenever a pull request (PR) is made. This Action performs checks for linting and ensures that all unit tests pass.
+
 ## Available Scripts
 
 In the project directory, you can run:
